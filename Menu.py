@@ -3,45 +3,47 @@ import pygame
 from pygame.locals import *
 #from actions import *
 from bibliotheque import *
-
+ 
 pygame.init()
 font = pygame.font.SysFont("Chiller", 40)
 font2 = pygame.font.SysFont("Chiller", 70)
 font3 = pygame.font.SysFont("Chiller",48)
 fenetre = pygame.display.set_mode((1024,768))
-
-
+ 
 fond = pygame.image.load("fond.jpg").convert()
 fenetre.blit(fond,(0,0))
 k=20
 pygame.display.update()
-
+pygame.display.set_caption("Trapped!")
+ 
 menu = 1
 choix = 4
 while menu:
     rendu_jouer = font3.render("Jouer",1,(255,255,255))
-    fenetre.blit(rendu_jouer,(797,466))
+    jouerRect = fenetre.blit(rendu_jouer,(797,466))
     rendu_instructions = font3.render("Instructions",1,(255,255,255))
-    fenetre.blit(rendu_instructions,(799,538))
+    instructionsRect = fenetre.blit(rendu_instructions,(799,538))
     rendu_credits = font3.render("Crédits",1,(255,255,255))
-    fenetre.blit(rendu_credits,(799,617))
+    creditsRect = fenetre.blit(rendu_credits,(799,617))
     rendu_quitter = font3.render("Quitter",1,(255,255,255))
-    fenetre.blit(rendu_quitter,(799,696))
+    quitterRect = fenetre.blit(rendu_quitter,(799,696))
     rendu_titre = font3.render("Trapped!",1,(255,0,0))
     fenetre.blit(rendu_titre,(100,77))
     pygame.display.update()
     if choix == 4:
         for  event in pygame.event.get():
-            if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>794 and event.pos[0]<910 and event.pos[1]<524 and event.pos[1]>465 :
-                choix = 1 # Jouer
-            if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>794 and event.pos[0]<1024 and event.pos[1]<597 and event.pos[1]>562 :
-                choix = 2 # Instructions
-            if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>794 and event.pos[0]<940 and event.pos[1]<675 and event.pos[1]>615 :
-                choix = 3 # Credits
-            if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>794 and event.pos[0]<940 and event.pos[1]<745 and event.pos[1]>695 or event.type == QUIT:
-                pygame.quit() # Quitter
-                exit()
-
+            if event.type == MOUSEBUTTONDOWN and event.button == 1 :
+                pos = pygame.mouse.get_pos()
+                if jouerRect.collidepoint(pos):
+                    choix = 1 # Jouer
+                if instructionsRect.collidepoint(pos):
+                    choix = 2 # Instructions
+                if creditsRect.collidepoint(pos):
+                    choix = 3 # Credits
+                if quitterRect.collidepoint(pos) or event.type == QUIT:
+                    pygame.quit() # Quitter
+                    exit()
+ 
     if choix == 2:
         fond = pygame.image.load("Fond.jpg").convert()
         fenetre.blit (fond,(0,0))
@@ -65,13 +67,15 @@ while menu:
             rendu_instructions_titre = font.render("Instructions",1,(255,255,255))
             fenetre.blit(rendu_instructions_titre,(870,5))
             rendu_retour = font.render("Retour",1,(255,255,255))
-            fenetre.blit(rendu_retour,(910,711))
+            retourRect = fenetre.blit(rendu_retour,(910,711))
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == KEYDOWN and event.key == K_ESCAPE:
-                    choix = 0
-                if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>910 and event.pos[0]<1006 and event.pos[1]<740 and event.pos[1]>711 :
-                    choix = 0
+                    choix = 0 # Retour
+                if event.type == MOUSEBUTTONDOWN and event.button == 1 :
+                    pos = pygame.mouse.get_pos()
+                    if retourRect.collidepoint(pos):
+                        choix = 0 # Retour
     if choix == 3:
         fond = pygame.image.load("fond.jpg").convert()
         fenetre.blit(fond,(0,0))
@@ -87,13 +91,15 @@ while menu:
             rendu_credits_titre = font.render("Crédits",1,(255,255,255))
             fenetre.blit(rendu_credits_titre,(920,5))
             rendu_retour = font.render("Retour",1,(255,255,255))
-            fenetre.blit(rendu_retour,(910,711))
+            retourRect = fenetre.blit(rendu_retour,(910,711))
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == KEYDOWN and event.key == K_ESCAPE:
                     choix = 0
-                if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>910 and event.pos[0]<1006 and event.pos[1]<740 and event.pos[1]>711 :
-                    choix = 0
+                if event.type == MOUSEBUTTONDOWN and event.button == 1 :
+                    pos = pygame.mouse.get_pos()
+                    if retourRect.collidepoint(pos):
+                        choix = 0 # Retour
     if choix == 0:
         fenetre = pygame.display.set_mode((1024,768))
         fond = pygame.image.load("fond.jpg").convert()
@@ -170,10 +176,9 @@ while menu:
                         if event.pos[0]>800  and event.pos[0]<1000 and event.pos[1]<740 and event.pos[1]>670:
                             menu=0
                             suite=1
-                            
+                           
 while suite==1:
     carte= Niveau("N1.txt")
     carte.generer()
     carte.afficher(fenetre)
     pygame.display.flip()
-
