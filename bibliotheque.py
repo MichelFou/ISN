@@ -1,11 +1,12 @@
 # -*- coding: cp1252 -*-
 import pygame
 # variables
-x_heros = 48
-y_heros = 32
+x_heros = 30
+y_heros = 47
+k=20
 
 #taille d'un sprite
-taille_sprite = 50
+taille_sprite = 72
 #variable niveau
 lvl = 1
 #variable Xp pour niveau suivant
@@ -17,6 +18,45 @@ pv = 60
 pv_max = 60
 
 #bibliotheque
+
+class Perso:
+    def __init__(self,droite,gauche,haut,bas,x,y,direction,lvl,xp_demande,xp,pv,pv_max,discretion,attaque,defense,vitesse,magie,degat,mort):
+	self.droite = pygame.image.load("Hero-right.png")
+	self.gauche = pygame.image.load("Hero-left.png")
+	self.haut = pygame.image.load("Hero-back.png")
+	self.bas = pygame.image.load("Hero-front.png")
+	self.x = xperso
+	self.y = yperso
+	self.direction = self.bas
+    	self.lvl = lvl
+	self.xp_demande = lvl*50
+    	self.xp = xp
+    	self.pv = pv
+    	self.pv_max = pv_max
+    	self.discretion = discretion
+    	self.attaque = attaque
+    	self.defense = defense
+    	self.vitesse = vitesse
+    	self.degat = degat
+    	self.magie = magie
+    	fenetre.blit(self.direction,self.x,self.y)
+    	self.mort = False
+    def deplacer(self,direction):
+    	if direction == "droite":
+    	    self.xperso+=5
+    	    self.direction = self.droite
+    	if direction == "gauche":
+    	    self.xperso-=5
+    	    self.direction = self.gauche
+    	if direction == "haut":
+	    self.yperso-=5
+	    self.direction = self.haut
+	if direction == "bas":
+	    self.yperso+=5
+            self.direction = self.bas
+    def update(self):
+        if self.pv <= 0:
+            self.mort = True
 
 #competences de base
 
@@ -30,7 +70,7 @@ magie = 1
 
 
 #caracteristiques armes
-#caracteristique epée de fer
+#caracteristique epÃ©e de fer
 attaque_ef = attaque + 2
 vitesse_ef = vitesse - 1
 degat_ef = degat + 2
@@ -114,8 +154,25 @@ vitesse_rm = vitesse + 1
 magie_rm = magie + 3
 
 #caracteristiques monstres
+
+class Loup1:
+    def __init__(self,x,y,attaque,perception,defense,vitesse,degat,xp,pv):
+	self.loup = pygame.image.load("loup.png").convert_alpha()
+	self.y=y
+	self.x=x
+	self.attaque = 10
+	self.perception = 20
+	self.defense = 7
+	self.vitesse = 17
+	self.degat = 5
+	self.xp = 7
+	self.pv = 20
+    def update(self):
+        if self.pv <= 0:
+            self.mort = True
+
 #caracteristique loup
-attaque_lo =10
+attaque_lo = 10
 perception_lo = 20
 defense_lo = 7
 vitesse_lo = 17
@@ -184,7 +241,7 @@ xp_sq =8
 pv_sq =15
 image_squelette="persos.png"
 
-#caracteristique araignée
+#caracteristique araignÃ©e
 attaque_ar =23
 perception_ar =17
 defense_ar =10
@@ -204,11 +261,11 @@ xp_pe = 50
 pv_pe =70
 image_persephon ="persos.png"
 
-#definition des images du décors
+#definition des images du dÃ©cors
 image_wall="herbe.png"
 image_tree="herbe.png"
 image_end="herbe.png"
-image_rien = "herbe.png"
+image_rien = "rien.png"
 image_herbe = "herbe.png"
 
 #definition des images du personnage joueur
