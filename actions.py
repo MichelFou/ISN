@@ -61,7 +61,7 @@ class Niveau:
         wall = pygame.image.load(image_wall).convert_alpha()
         tree = pygame.image.load(image_tree).convert_alpha()
         herbe = pygame.image.load(image_herbe).convert_alpha()
-        joueur = pygame.image.load(image_joueur_haut).convert_alpha()
+        joueur = pygame.image.load("Hero-up.png").convert_alpha()
         end = pygame.image.load(image_end).convert_alpha()
         rien = pygame.image.load(image_rien).convert_alpha()
         ligne_affichee = 0

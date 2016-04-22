@@ -2,6 +2,7 @@
 import pygame
 pygame.init()
 from random import *
+from pygame.locals import*
 class Player:
         def __init__(self):
                 self.level = 1
@@ -15,20 +16,20 @@ class Player:
                 self.magie = 1
                 self.degat = 1
                 self.discretion = 1
-                self.x = 0
-                self.y = 0
+                self.x = 30
+                self.y = 47
                 self.estmort = False
                 self.hasarme = False
                 self.hasarmure = None
                 self.sort = None
+                self.armure = None
                 self.up = pygame.image.load("Hero-up.png")
                 self.down = pygame.image.load("Hero-down.png")
                 self.left = pygame.image.load("Hero-left.png")
                 self.right = pygame.image.load("Hero-right.png")
                 self.direction = self.up
-                self.image = self.direction
-                self.armure = None
-
+                self.image = self.direction                
+                
         def moveup(self):
                 self.direction = self.up
                 self.y-=72
@@ -49,6 +50,25 @@ class Player:
                 if self.pv <= 0:
                         self.estmort = True
                         gameover = True
+                fenetre.blit(self.image,(self.x,self.y))
+                if self.xp == nextlevelxp:
+                        self.xp = 0
+                        levelup = True
+                if self.xp > nextlevelxp:
+                        self.xp -= self.nextlevelxp
+                        levelup = True
+                if levelup:
+                        self.levelup()
+                        
+        def levelup(self):
+                self.pv += 5
+                self.pv_max += 5
+                self.attaque += 1
+                self.defense += 1
+                self.vitesse += 1
+                self.magie += 1
+                self.degat += 1
+                self.discretion += 1
         
         def equiper_armure(self,armure):
                 if self.hasarmure:
@@ -80,6 +100,7 @@ class Player:
         def blesse(self,mob_name):
                 if randint(1,30)<mob_name.attaque:
                         if randint(1,30)>self.vitesse:
+                                print ("Coup !")
                                 valeur = randint(1,mob_name.degat)-randint(1,self.defense)
                                 if valeur > 0:
                                         self.pv -= valeur
@@ -91,7 +112,8 @@ class Player:
                 else:
                         echec = True
                         print "Echec !"
-                
+        def attack(self,mob_name):
+                mob_name.blesse(self)
 
 class Armure:
         def __init__(self):
@@ -182,8 +204,12 @@ class Mobs:
                 self.defense = 0
                 self.perception = 0
                 self.xp = 0
+                self.x = 0
+                self.y = 0
         class Loup:
-                def __init__(self):
+                def __init__(self,x,y):
+                        self.x = x
+                        self.y = y
                         self.image = pygame.image.load("loup.png").convert_alpha()
                         self.pv = 20
                         self.vitesse = 17
@@ -196,9 +222,27 @@ class Mobs:
                         if self.pv <= 0:
                                 self.estmort = True
                                 player.xp += self.xp
+                        fenetre.blit(self.image,(self.x,self.y))
+                def blesse(self,player_name):
+                        if randint(1,30)<player_name.attaque:
+                                if randint(1,30)>self.vitesse:
+                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        print "Coup !"
+                                        if valeur > 0:
+                                                self.pv -= valeur
+                                        else:
+                                                self.pv -= 0
+                                else:
+                                        esquive = True
+                                        print "Esquive !"
+                        else:
+                                echec = True
+                                print "Echec !"
 
         class Orc:
-                def __init__(self):
+                def __init__(self,x,y):
+                        self.x = x
+                        self.y = y
                         self.image = pygame.image.load("orc.png").convert_alpha()
                         self.pv = 20
                         self.vitesse = 15
@@ -211,8 +255,27 @@ class Mobs:
                         if self.pv <= 0:
                                 self.estmort = True
                                 player.xp += self.xp
+                        fenetre.blit(self.image,(self.x,self.y))
+                def blesse(self,player_name):
+                        if randint(1,30)<player_name.attaque:
+                                if randint(1,30)>self.vitesse:
+                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        print "Coup !"
+                                        if valeur > 0:
+                                                self.pv -= valeur
+                                        else:
+                                                self.pv -= 0
+                                else:
+                                        esquive = True
+                                        print "Esquive !"
+                        else:
+                                echec = True
+                                print "Echec !"
+
         class Gobelin:
-                def __init__(self):
+                def __init__(self,x,y):
+                        self.x = x
+                        self.y = y
                         self.image = pygame.image.load("gobelin.png").convert_alpha()
                         self.pv = 20
                         self.vitesse = 15
@@ -225,8 +288,26 @@ class Mobs:
                         if self.pv <= 0:
                                 self.estmort = True
                                 player.xp += self.xp
+                        fenetre.blit(self.image,(self.x,self.y))
+                def blesse(self,player_name):
+                        if randint(1,30)<player_name.attaque:
+                                if randint(1,30)>self.vitesse:
+                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        print "Coup !"
+                                        if valeur > 0:
+                                                self.pv -= valeur
+                                        else:
+                                                self.pv -= 0
+                                else:
+                                        esquive = True
+                                        print "Esquive !"
+                        else:
+                                echec = True
+                                print "Echec !"
         class Centaure:
-                def __init__(self):
+                def __init__(self,x,y):
+                        self.x = x
+                        self.y = y
                         self.image = pygame.image.load("centaure.png").convert_alpha()
                         self.pv = 25
                         self.vitesse = 20
@@ -239,8 +320,25 @@ class Mobs:
                         if self.pv <= 0:
                                 self.estmort = True
                                 player.xp += self.xp
-        class Cavalier:
-                def __init__(self):
+                        fenetre.blit(self.image,(self.x,self.y))
+                def blesse(self,player_name):
+                        if randint(1,30)<player_name.attaque:
+                                if randint(1,30)>self.vitesse:
+                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        print "Coup !"
+                                        if valeur > 0:
+                                                self.pv -= valeur
+                                        else:
+                                                self.pv -= 0
+                                else:
+                                        esquive = True
+                                        print "Esquive !"
+                        else:
+                                echec = True
+                                print "Echec !"
+                def __init__(self,x,y):
+                        self.x = x
+                        self.y = y
                         self.image = pygame.image.load("cavalier.png").convert_alpha()
                         self.pv = 25
                         self.vitesse = 20
@@ -253,8 +351,26 @@ class Mobs:
                         if self.pv <= 0:
                                 self.estmort = True
                                 player.xp += self.xp
+                        fenetre.blit(self.image,(self.x,self.y))
+                def blesse(self,player_name):
+                        if randint(1,30)<player_name.attaque:
+                                if randint(1,30)>self.vitesse:
+                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        print "Coup !"
+                                        if valeur > 0:
+                                                self.pv -= valeur
+                                        else:
+                                                self.pv -= 0
+                                else:
+                                        esquive = True
+                                        print "Esquive !"
+                        else:
+                                echec = True
+                                print "Echec !"
         class Mort_vivant:
-                def __init__(self):
+                def __init__(self,x,y):
+                        self.x = x
+                        self.y = y
                         self.image = pygame.image.load("mort_vivant.png").convert_alpha()
                         self.pv = 15
                         self.vitesse = 10
@@ -267,8 +383,26 @@ class Mobs:
                         if self.pv <= 0:
                                 self.estmort = True
                                 player.xp += self.xp
+                        fenetre.blit(self.image,(self.x,self.y))
+                def blesse(self,player_name):
+                        if randint(1,30)<player_name.attaque:
+                                if randint(1,30)>self.vitesse:
+                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        print "Coup !"
+                                        if valeur > 0:
+                                                self.pv -= valeur
+                                        else:
+                                                self.pv -= 0
+                                else:
+                                        esquive = True
+                                        print "Esquive !"
+                        else:
+                                echec = True
+                                print "Echec !"
         class Squelette:
-                def __init__(self):
+                def __init__(self,x,y):
+                        self.x = x
+                        self.y = y
                         self.image = pygame.image.load("squelette.png").convert_alpha()
                         self.pv = 15
                         self.vitesse = 13
@@ -281,8 +415,26 @@ class Mobs:
                         if self.pv <= 0:
                                 self.estmort = True
                                 player.xp += self.xp
+                        fenetre.blit(self.image,(self.x,self.y))
+                def blesse(self,player_name):
+                        if randint(1,30)<player_name.attaque:
+                                if randint(1,30)>self.vitesse:
+                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        print "Coup !"
+                                        if valeur > 0:
+                                                self.pv -= valeur
+                                        else:
+                                                self.pv -= 0
+                                else:
+                                        esquive = True
+                                        print "Esquive !"
+                        else:
+                                echec = True
+                                print "Echec !"
         class Araignee:
-                def __init__(self):
+                def __init__(self,x,y):
+                        self.x = x
+                        self.y = y
                         self.image = pygame.image.load("araignee.png").convert_alpha()
                         self.pv = 20
                         self.vitesse = 17
@@ -295,8 +447,26 @@ class Mobs:
                         if self.pv <= 0:
                                 self.estmort = True
                                 player.xp += self.xp
+                        fenetre.blit(self.image,(self.x,self.y))
+                def blesse(self,player_name):
+                        if randint(1,30)<player_name.attaque:
+                                if randint(1,30)>self.vitesse:
+                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        print "Coup !"
+                                        if valeur > 0:
+                                                self.pv -= valeur
+                                        else:
+                                                self.pv -= 0
+                                else:
+                                        esquive = True
+                                        print "Esquive !"
+                        else:
+                                echec = True
+                                print "Echec !"
         class Persephon:
-                def __init__(self):
+                def __init__(self,x,y):
+                        self.x = x
+                        self.y = y
                         self.image = pygame.image.load("persephon.png").convert_alpha()
                         self.pv = 70
                         self.vitesse = 17
@@ -309,6 +479,24 @@ class Mobs:
                         if self.pv <= 0:
                                 self.estmort = True
                                 player.xp += self.xp
+                        fenetre.blit(self.image,(self.x,self.y))
                                 
                 def attack(self,player_name):
                         player_name.blesse(self)
+        
+                def blesse(self,player_name):
+                        if randint(1,30)<player_name.attaque:
+                                if randint(1,30)>self.vitesse:
+                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        print "Coup !"
+                                        if valeur > 0:
+                                                self.pv -= valeur
+                                        else:
+                                                self.pv -= 0
+                                else:
+                                        esquive = True
+                                        print "Esquive !"
+                        else:
+                                echec = True
+                                print "Echec !"
+                

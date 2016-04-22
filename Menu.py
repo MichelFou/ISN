@@ -24,8 +24,8 @@ pygame.display.flip()
 
 menu = 1
 choix = 4
-pygame.mixer.music.load("01-Aqualung.wav")
-pygame.mixer.music.play(-1)
+#pygame.mixer.music.load("01-Aqualung.wav")
+#pygame.mixer.music.play(-1)
 while menu:
     if choix == 4:
         #écriture du texte du menu
@@ -218,8 +218,8 @@ affichage_soin="disponible"
 
 #boucle du niveau 1
 #musique du niveau
-pygame.mixer.music.load("01-Aqualung.wav")
-pygame.mixer.music.play(-1)
+#pygame.mixer.music.load("01-Aqualung.wav")
+#pygame.mixer.music.play(-1)
 while suite==1:
     #mise en place du fond
     fond = pygame.image.load("Hud.jpg").convert()
