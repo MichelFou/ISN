@@ -92,8 +92,20 @@ while 1:
                 fenetre.blit(rendu_credits1,(35,79))
                 rendu_credits2 = font.render("BERKI Rayan",1,(255,0,0))
                 fenetre.blit(rendu_credits2,(230,125))
-                rendu_credits3 = font.render("Graphismes & Musiques : TAING Alexandre",1,(255,0,0))
+                rendu_credits3 = font.render("Graphismes : TAING Alexandre",1,(255,0,0))
                 fenetre.blit(rendu_credits3,(35,200))
+                rendu_credits4 = font.render("Musiques : The time to run - Dexter Britain",1,(255,0,0))
+                fenetre.blit(rendu_credits4,(35,275))
+                rendu_credits5 = font.render("           Aydio - Deltitnu",1,(255,0,0))
+                fenetre.blit(rendu_credits5,(35,325))
+                rendu_credits6 = font.render("           Binaerpilot - Cornered",1,(255,0,0))
+                fenetre.blit(rendu_credits6,(35,375))
+                rendu_credits7 = font.render("           Mel P - Les restes de Niourk",1,(255,0,0))
+                fenetre.blit(rendu_credits7,(35,425))
+                rendu_credits8 = font.render("           Zero Call - A40",1,(255,0,0))
+                fenetre.blit(rendu_credits8,(35,475))
+                rendu_credits9 = font.render("           JT Bruce - Temporal Distortion",1,(255,0,0))
+                fenetre.blit(rendu_credits9,(35,525))
                 rendu_credits_titre = font.render("Credits",1,(255,255,255))
                 fenetre.blit(rendu_credits_titre,(920,5))
                 rendu_retour = font.render("Retour",1,(255,255,255))
@@ -265,7 +277,7 @@ while 1:
                 if event.key == K_3:
                     arme_dacier()
                     
-                if evnet.key== K_4:
+                if event.key== K_4:
                     invisibilite()
                     
                 if event.key ==K_5:
@@ -340,7 +352,7 @@ while 1:
                 if event.key == K_3:
                     arme_dacier()
                     
-                if evnet.key== K_4:
+                if event.key== K_4:
                     invisibilite()
                     
                 if event.key ==K_5:
@@ -415,7 +427,7 @@ while 1:
                 if event.key == K_3:
                     arme_dacier()
                     
-                if evnet.key== K_4:
+                if event.key== K_4:
                     invisibilite()
                     
                 if event.key ==K_5:
@@ -490,7 +502,7 @@ while 1:
                 if event.key == K_3:
                     arme_dacier()
                     
-                if evnet.key== K_4:
+                if event.key== K_4:
                     invisibilite()
                     
                 if event.key ==K_5:
@@ -565,7 +577,7 @@ while 1:
                 if event.key == K_3:
                     arme_dacier()
                     
-                if evnet.key== K_4:
+                if event.key== K_4:
                     invisibilite()
                     
                 if event.key ==K_5:
