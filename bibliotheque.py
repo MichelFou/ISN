@@ -7,15 +7,6 @@ k=20
 
 #taille d'un sprite
 taille_sprite = 72
-#variable niveau
-lvl = 1
-#variable Xp pour niveau suivant
-xp_demande = lvl * 50
-#variable xp du joueur
-xp = 0
-#points de vie
-pv = 60
-pv_max = 60
 
 #bibliotheque
 

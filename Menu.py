@@ -1,33 +1,27 @@
 # -*- coding: cp1252 -*-
 import pygame
-from pygame.locals import*
-from actions import*
-from Class import*
-from bibliotheque import*
+from pygame.locals import *
+from actions import *
+from Class import *
+from bibliotheque import *
 #initialisation pygame
 pygame.init()
 
 #mise en place d'une icone et d'un titre a la fenetre
-icone=pygame.image.load("Hero-right.png")
+icone=pygame.image.load("Images/Hero-right.png")
 pygame.display.set_icon(icone)
 pygame.display.set_caption("Trapped!")
 
-#initialisation des polices d'ecriture
-font = pygame.font.SysFont("Chiller", 40)
-font2 = pygame.font.SysFont("Chiller", 70)
-font3 = pygame.font.SysFont("Chiller",48)
-
-while True:
+while 1:
     #mise en place de la fenetre
     fenetre = pygame.display.set_mode((1083,812),RESIZABLE)
-    fond = pygame.image.load("FOND.jpg").convert()
+    fond = pygame.image.load("Images/FOND.jpg").convert()
     fenetre.blit(fond,(0,0))
     pygame.display.flip()
-
     menu = 1
     gameover=0
     choix = 4
-    pygame.mixer.music.load("01-Aqualung.wav")
+    pygame.mixer.music.load("Musiques/Musique menu.wav")
     pygame.mixer.music.play(-1)
     while menu:
         if choix == 4:
@@ -56,7 +50,7 @@ while True:
 
         if choix == 2:
             #fenetre d'instruction
-            fond = pygame.image.load("FOND.jpg").convert()
+            fond = pygame.image.load("Images/FOND.jpg").convert()
             fenetre.blit (fond,(0,0))
             pygame.display.flip()
             while choix==2:
@@ -88,7 +82,7 @@ while True:
                         choix = 0 #retour au menu par clic
         #ecran credits
         if choix == 3:
-            fond = pygame.image.load("FOND.jpg").convert()
+            fond = pygame.image.load("Images/FOND.jpg").convert()
             fenetre.blit(fond,(0,0))
             pygame.display.flip()
             #Ecriture du texte du menu
@@ -112,7 +106,7 @@ while True:
                         choix = 0 #retour au menu par clic
     #re-mise en place de la fenetre de menu dans une autre boucle pour eviter clignotement
         if choix == 0:
-            fond = pygame.image.load("FOND.jpg").convert()
+            fond = pygame.image.load("Images/FOND.jpg").convert()
             fenetre.blit (fond,(0,0))
             pygame.display.flip()
             #retour a la boucle des choix
@@ -122,7 +116,7 @@ while True:
             while k>=0:
                 pygame.time.Clock().tick(30)
                 #affichage de l'ecran des competences
-                skill = pygame.image.load("Skill.jpg").convert()
+                skill = pygame.image.load("Images/Skill.jpg").convert()
                 fenetre.blit(skill,(0,0))
                 rendu_k = font.render(str(k), 1, (255,0,0))
                 fenetre.blit(rendu_k, (123, 670))
@@ -207,72 +201,19 @@ while True:
                         menu = 0
                         #entree dans la nouvelle boucle
                         suite = 1
-    #rendre tous les sorts disponibles
-    berserk = 1
-    affichage_be="disponible"
-    corps_d_acier=1
-    affichage_ca="disponible"
-    arme_d_acier = 1
-    affichage_aa="disponible"
-    invisibilite = 1
-    affichage_in="disponible"
-    soin = 1
-    affichage_soin="disponible"
 
     #boucle du niveau 1
     #musique du niveau
-    pygame.mixer.music.load("01-Aqualung.wav")
+    pygame.mixer.music.load("Musiques/Musique n1.wav")
     pygame.mixer.music.play(-1)
     adjacent_gauche = None
     adjacent_droite = None
     adjacent_haut = None
     adjacent_bas = None
     while suite==1:
-        #mise en place du fond
-        fond = pygame.image.load("Hud.jpg").convert()
-        fenetre.blit(fond,(0,0))
-        #ecriture des textes
-        rendu_pv = font.render("PV :", 1, (255,0,0))
-        fenetre.blit(rendu_pv,(100,10))
-        point_vie = font.render(str(pv),1,(255,0,0))
-        slash = font.render("/",1,(255,0,0))
-        point_vie_max=font.render(str(pv_max),1,(255,0,0))
-        fenetre.blit(point_vie,(70,70))
-        fenetre.blit(point_vie_max,(160,70))
-        fenetre.blit(slash,(120,70))
-        ecris_niveau =font.render("Niveau",1,(255,0,0))
-        niveau = font.render(str(lvl),1,(255,0,0))
-        fenetre.blit(ecris_niveau,(80,130))
-        fenetre.blit(niveau,(180,130))
-        ecris_xp=font.render("XP :",1,(255,0,0))
-        experience = font.render(str(xp), 1, (255,0,0))
-        experience_demandee =font.render(str(xp_demande), 1, (255,0,0))
-        fenetre.blit(ecris_xp,(100,180))
-        fenetre.blit(experience,(70,230))
-        fenetre.blit(experience_demandee,(160,230))
-        fenetre.blit(slash,(120,230))
-        ecrit_be= font.render ("Berserk-touche 1",1,(255,0,0))
-        fenetre.blit(ecrit_be,(30,310))
-        dispo_be = font.render(str(affichage_be),1,(172,35,220))
-        fenetre.blit(dispo_be,(100,340))
-        ecrit_ca = font.render ("Corps d'acier-touche 2",1,(255,0,0))
-        fenetre.blit(ecrit_ca,(0,410))
-        dispo_ca = font.render(str(affichage_ca),1,(172,35,220))
-        fenetre.blit(dispo_ca,(100,440))
-        ecrit_aa = font.render ("Arme d'acier-touche 3",1,(255,0,0))
-        fenetre.blit(ecrit_aa,(0,510))
-        dispo_aa = font.render(str(affichage_aa),1,(172,35,220))
-        fenetre.blit(dispo_aa,(100,540))
-        ecrit_in = font.render ("Invisibilite-touche 4",1,(255,0,0))
-        fenetre.blit(ecrit_in,(30,610))
-        dispo_in = font.render(str(affichage_in),1,(172,35,220))
-        fenetre.blit(dispo_in,(100,640))
-        ecrit_soin = font.render ("Soin-touche 5",1,(255,0,0))
-        fenetre.blit(ecrit_soin,(70,710))
-        dispo_soin = font.render(str(affichage_soin),1,(172,35,220))
-        fenetre.blit(dispo_soin,(100,740))
+        hud()
         #initialisation de la carte
-        carte= Niveau("N1.txt")
+        carte = Niveau("Niveaux/N1.txt")
         carte.generer()
         carte.afficher(fenetre)
         pygame.display.flip()
@@ -285,14 +226,14 @@ while True:
                 if event.key==K_LEFT:
                     if adjacent_gauche !=None:
                         player.attack(adjacent_gauche)
-                    elif structure_niveau[player.y][player.x-1]='h':
+                    elif carte.structure[player.y][player.x-1]=='h':
                         player.moveleft
                         update()
                     
                 if event.key==K_UP:
                     if adjacent_haut != None:
                         player.attack(adjacent_haut)
-                    elif structure_niveau[player.y-1][player.x]='h':
+                    elif carte.structure[player.y-1][player.x]=='h':
                         player.moveup
                         update()
 
@@ -300,14 +241,14 @@ while True:
                 if event.key==K_DOWN:
                     if adjacent_bas != None:
                         player.attack(adjacent_bas)
-                    elif structure_niveau[player.y+1][player.x]='h':
+                    elif carte.structure[player.y+1][player.x]=='h':
                         player.movedown
                         update()
                       
                 if event.key==K_RIGHT:
                     if adjacent_droite != None:
                         player.attack(adjacent_droite)
-                    elif structure_niveau[player.y][player.x+1]='h':
+                    elif carte.structure[player.y][player.x+1]=='h':
                         player.moveright
                         update()
                         
@@ -338,59 +279,16 @@ while True:
             suite = 2
 
     #musique du niveau
-    pygame.mixer.music.load("01-Aqualung.wav")
+    pygame.mixer.music.load("Musiques/Musique n2.wav")
     pygame.mixer.music.play(-1)
     adjacent_gauche = None
     adjacent_droite = None
     adjacent_haut = None
     adjacent_bas = None
     while suite ==2:
-        #mise en place du fond
-        fond = pygame.image.load("Hud.jpg").convert()
-        fenetre.blit(fond,(0,0))
-        #ecriture des textes
-        rendu_pv = font.render("PV :", 1, (255,0,0))
-        fenetre.blit(rendu_pv,(100,10))
-        point_vie = font.render(str(pv),1,(255,0,0))
-        slash = font.render("/",1,(255,0,0))
-        point_vie_max=font.render(str(pv_max),1,(255,0,0))
-        fenetre.blit(point_vie,(70,70))
-        fenetre.blit(point_vie_max,(160,70))
-        fenetre.blit(slash,(120,70))
-        ecris_niveau =font.render("Niveau",1,(255,0,0))
-        niveau = font.render(str(lvl),1,(255,0,0))
-        fenetre.blit(ecris_niveau,(80,130))
-        fenetre.blit(niveau,(180,130))
-        ecris_xp=font.render("XP :",1,(255,0,0))
-        experience = font.render(str(xp), 1, (255,0,0))
-        experience_demandee =font.render(str(xp_demande), 1, (255,0,0))
-        fenetre.blit(ecris_xp,(100,180))
-        fenetre.blit(experience,(70,230))
-        fenetre.blit(experience_demandee,(160,230))
-        fenetre.blit(slash,(120,230))
-        ecrit_be= font.render ("Berserk-touche 1",1,(255,0,0))
-        fenetre.blit(ecrit_be,(30,310))
-        dispo_be = font.render(str(affichage_be),1,(172
-                                                    ,35,220))
-        fenetre.blit(dispo_be,(100,340))
-        ecrit_ca = font.render ("Corps d'acier-touche 2",1,(255,0,0))
-        fenetre.blit(ecrit_ca,(0,410))
-        dispo_ca = font.render(str(affichage_ca),1,(172,35,220))
-        fenetre.blit(dispo_ca,(100,440))
-        ecrit_aa = font.render ("Arme d'acier-touche 3",1,(255,0,0))
-        fenetre.blit(ecrit_aa,(0,510))
-        dispo_aa = font.render(str(affichage_aa),1,(172,35,220))
-        fenetre.blit(dispo_aa,(100,540))
-        ecrit_in = font.render ("Invisibilite-touche 4",1,(255,0,0))
-        fenetre.blit(ecrit_in,(30,610))
-        dispo_in = font.render(str(affichage_in),1,(172,35,220))
-        fenetre.blit(dispo_in,(100,640))
-        ecrit_soin = font.render ("Soin-touche 5",1,(255,0,0))
-        fenetre.blit(ecrit_soin,(70,710))
-        dispo_soin = font.render(str(affichage_soin),1,(172,35,220))
-        fenetre.blit(dispo_soin,(100,740))
+        hud()
         #initialisation de la carte
-        carte= Niveau("N2.txt")
+        carte= Niveau("Niveaux/N2.txt")
         carte.generer()
         carte.afficher(fenetre)
         pygame.display.flip()
@@ -404,14 +302,14 @@ while True:
                 if event.key==K_LEFT:
                     if adjacent_gauche !=None:
                         player.attack(adjacent_gauche)
-                    elif structure_niveau[player.y][player.x-1]='h':
+                    elif carte.structure[player.y][player.x-1]=='h':
                         player.moveleft
                         update()
                     
                 if event.key==K_UP:
                     if adjacent_haut != None:
                         player.attack(adjacent_haut)
-                    elif structure_niveau[player.y-1][player.x]='h':
+                    elif carte.structure[player.y-1][player.x]=='h':
                         player.moveup
                         update()
 
@@ -419,19 +317,34 @@ while True:
                 if event.key==K_DOWN:
                     if adjacent_bas != None:
                         player.attack(adjacent_bas)
-                    elif structure_niveau[player.y+1][player.x]='h':
+                    elif carte.structure[player.y+1][player.x]=='h':
                         player.movedown
                         update()
                       
                 if event.key==K_RIGHT:
                     if adjacent_droite != None:
                         player.attack(adjacent_droite)
-                    elif structure_niveau[player.y][player.x+1]='h':
+                    elif carte.structure[player.y][player.x+1]=='h':
                         player.moveright
                         update()
                     
                 if event.key==K_SPACE:
                     update()
+
+                if event.key ==K_1:
+                    berserk()
+                    
+                if event.key == K_2:
+                    corps_dacier()
+                    
+                if event.key == K_3:
+                    arme_dacier()
+                    
+                if evnet.key== K_4:
+                    invisibilite()
+                    
+                if event.key ==K_5:
+                    soin()
                     
         if gameover == 1:
             suite = 7
@@ -441,58 +354,16 @@ while True:
             suite = 3
 
     #musique du niveau
-    pygame.mixer.music.load("01-Aqualung.wav")
+    pygame.mixer.music.load("Musiques/Musique n3.wav")
     pygame.mixer.music.play(-1)
     adjacent_gauche = None
     adjacent_droite = None
     adjacent_haut = None
     adjacent_bas = None
     while suite == 3:
-        #mise en place du fond
-        fond = pygame.image.load("Hud.jpg").convert()
-        fenetre.blit(fond,(0,0))
-        #ecriture des textes
-        rendu_pv = font.render("PV :", 1, (255,0,0))
-        fenetre.blit(rendu_pv,(100,10))
-        point_vie = font.render(str(pv),1,(255,0,0))
-        slash = font.render("/",1,(255,0,0))
-        point_vie_max=font.render(str(pv_max),1,(255,0,0))
-        fenetre.blit(point_vie,(70,70))
-        fenetre.blit(point_vie_max,(160,70))
-        fenetre.blit(slash,(120,70))
-        ecris_niveau =font.render("Niveau",1,(255,0,0))
-        niveau = font.render(str(lvl),1,(255,0,0))
-        fenetre.blit(ecris_niveau,(80,130))
-        fenetre.blit(niveau,(180,130))
-        ecris_xp=font.render("XP :",1,(255,0,0))
-        experience = font.render(str(xp), 1, (255,0,0))
-        experience_demandee =font.render(str(xp_demande), 1, (255,0,0))
-        fenetre.blit(ecris_xp,(100,180))
-        fenetre.blit(experience,(70,230))
-        fenetre.blit(experience_demandee,(160,230))
-        fenetre.blit(slash,(120,230))
-        ecrit_be= font.render ("Berserk-touche 1",1,(255,0,0))
-        fenetre.blit(ecrit_be,(30,310))
-        dispo_be = font.render(str(affichage_be),1,(172,35,220))
-        fenetre.blit(dispo_be,(100,340))
-        ecrit_ca = font.render ("Corps d'acier-touche 2",1,(255,0,0))
-        fenetre.blit(ecrit_ca,(0,410))
-        dispo_ca = font.render(str(affichage_ca),1,(172,35,220))
-        fenetre.blit(dispo_ca,(100,440))
-        ecrit_aa = font.render ("Arme d'acier-touche 3",1,(255,0,0))
-        fenetre.blit(ecrit_aa,(0,510))
-        dispo_aa = font.render(str(affichage_aa),1,(172,35,220))
-        fenetre.blit(dispo_aa,(100,540))
-        ecrit_in = font.render ("Invisibilite-touche 4",1,(255,0,0))
-        fenetre.blit(ecrit_in,(30,610))
-        dispo_in = font.render(str(affichage_in),1,(172,35,220))
-        fenetre.blit(dispo_in,(100,640))
-        ecrit_soin = font.render ("Soin-touche 5",1,(255,0,0))
-        fenetre.blit(ecrit_soin,(70,710))
-        dispo_soin = font.render(str(affichage_soin),1,(172,35,220))
-        fenetre.blit(dispo_soin,(100,740))
+        hud()
         #initialisation de la carte
-        carte= Niveau("N3.txt")
+        carte= Niveau("Niveaux/N3.txt")
         carte.generer()
         carte.afficher(fenetre)
         pygame.display.flip()
@@ -506,14 +377,14 @@ while True:
                 if event.key==K_LEFT:
                     if adjacent_gauche !=None:
                         player.attack(adjacent_gauche)
-                    elif structure_niveau[player.y][player.x-1]='h':
+                    elif carte.structure[player.y][player.x-1]=='h':
                         player.moveleft
                         update()
                     
                 if event.key==K_UP:
                     if adjacent_haut != None:
                         player.attack(adjacent_haut)
-                    elif structure_niveau[player.y-1][player.x]='h':
+                    elif carte.structure[player.y-1][player.x]=='h':
                         player.moveup
                         update()
 
@@ -521,19 +392,34 @@ while True:
                 if event.key==K_DOWN:
                     if adjacent_bas != None:
                         player.attack(adjacent_bas)
-                    elif structure_niveau[player.y+1][player.x]='h':
+                    elif carte.structure[player.y+1][player.x]=='h':
                         player.movedown
                         update()
                       
                 if event.key==K_RIGHT:
                     if adjacent_droite != None:
                         player.attack(adjacent_droite)
-                    elif structure_niveau[player.y][player.x+1]='h':
+                    elif carte.structure[player.y][player.x+1]=='h':
                         player.moveright
                         update()
                     
                 if event.key==K_SPACE:
                     update()
+
+                if event.key ==K_1:
+                    berserk()
+                    
+                if event.key == K_2:
+                    corps_dacier()
+                    
+                if event.key == K_3:
+                    arme_dacier()
+                    
+                if evnet.key== K_4:
+                    invisibilite()
+                    
+                if event.key ==K_5:
+                    soin()
                     
         if gameover == 1:
             suite = 7                
@@ -543,58 +429,16 @@ while True:
             suite = 4
 
     #musique du niveau
-    pygame.mixer.music.load("01-Aqualung.wav")
+    pygame.mixer.music.load("Musiques/Musique n4.wav")
     pygame.mixer.music.play(-1)
     adjacent_gauche = None
     adjacent_droite = None
     adjacent_haut = None
     adjacent_bas = None
     while suite==4:
-        #mise en place du fond
-        fond = pygame.image.load("Hud.jpg").convert()
-        fenetre.blit(fond,(0,0))
-        #ecriture des textes
-        rendu_pv = font.render("PV :", 1, (255,0,0))
-        fenetre.blit(rendu_pv,(100,10))
-        point_vie = font.render(str(pv),1,(255,0,0))
-        slash = font.render("/",1,(255,0,0))
-        point_vie_max=font.render(str(pv_max),1,(255,0,0))
-        fenetre.blit(point_vie,(70,70))
-        fenetre.blit(point_vie_max,(160,70))
-        fenetre.blit(slash,(120,70))
-        ecris_niveau =font.render("Niveau",1,(255,0,0))
-        niveau = font.render(str(lvl),1,(255,0,0))
-        fenetre.blit(ecris_niveau,(80,130))
-        fenetre.blit(niveau,(180,130))
-        ecris_xp=font.render("XP :",1,(255,0,0))
-        experience = font.render(str(xp), 1, (255,0,0))
-        experience_demandee =font.render(str(xp_demande), 1, (255,0,0))
-        fenetre.blit(ecris_xp,(100,180))
-        fenetre.blit(experience,(70,230))
-        fenetre.blit(experience_demandee,(160,230))
-        fenetre.blit(slash,(120,230))
-        ecrit_be= font.render ("Berserk-touche 1",1,(255,0,0))
-        fenetre.blit(ecrit_be,(30,310))
-        dispo_be = font.render(str(affichage_be),1,(172,35,220))
-        fenetre.blit(dispo_be,(100,340))
-        ecrit_ca = font.render ("Corps d'acier-touche 2",1,(255,0,0))
-        fenetre.blit(ecrit_ca,(0,410))
-        dispo_ca = font.render(str(affichage_ca),1,(172,35,220))
-        fenetre.blit(dispo_ca,(100,440))
-        ecrit_aa = font.render ("Arme d'acier-touche 3",1,(255,0,0))
-        fenetre.blit(ecrit_aa,(0,510))
-        dispo_aa = font.render(str(affichage_aa),1,(172,35,220))
-        fenetre.blit(dispo_aa,(100,540))
-        ecrit_in = font.render ("Invisibilite-touche 4",1,(255,0,0))
-        fenetre.blit(ecrit_in,(30,610))
-        dispo_in = font.render(str(affichage_in),1,(172,35,220))
-        fenetre.blit(dispo_in,(100,640))
-        ecrit_soin = font.render ("Soin-touche 5",1,(255,0,0))
-        fenetre.blit(ecrit_soin,(70,710))
-        dispo_soin = font.render(str(affichage_soin),1,(172,35,220))
-        fenetre.blit(dispo_soin,(100,740))
+        hud()
         #initialisation de la carte
-        carte= Niveau("N4.txt")
+        carte= Niveau("Niveaux/N4.txt")
         carte.generer()
         carte.afficher(fenetre)
         pygame.display.flip()
@@ -608,14 +452,14 @@ while True:
                 if event.key==K_LEFT:
                     if adjacent_gauche !=None:
                         player.attack(adjacent_gauche)
-                    elif structure_niveau[player.y][player.x-1]='h':
+                    elif carte.structure[player.y][player.x-1]=='h':
                         player.moveleft
                         update()
                     
                 if event.key==K_UP:
                     if adjacent_haut != None:
                         player.attack(adjacent_haut)
-                    elif structure_niveau[player.y-1][player.x]='h':
+                    elif carte.structure[player.y-1][player.x]=='h':
                         player.moveup
                         update()
 
@@ -623,19 +467,34 @@ while True:
                 if event.key==K_DOWN:
                     if adjacent_bas != None:
                         player.attack(adjacent_bas)
-                    elif structure_niveau[player.y+1][player.x]='h':
+                    elif carte.structure[player.y+1][player.x]=='h':
                         player.movedown
                         update()
                       
                 if event.key==K_RIGHT:
                     if adjacent_droite != None:
                         player.attack(adjacent_droite)
-                    elif structure_niveau[player.y][player.x+1]='h':
+                    elif carte.structure[player.y][player.x+1]=='h':
                         player.moveright
                         update()
                     
                 if event.key==K_SPACE:
                     update()
+
+                if event.key ==K_1:
+                    berserk()
+                    
+                if event.key == K_2:
+                    corps_dacier()
+                    
+                if event.key == K_3:
+                    arme_dacier()
+                    
+                if evnet.key== K_4:
+                    invisibilite()
+                    
+                if event.key ==K_5:
+                    soin()
                     
         if gameover == 1:
             suite = 7
@@ -645,58 +504,16 @@ while True:
             suite = 5
 
     #musique du niveau
-    pygame.mixer.music.load("01-Aqualung.wav")
+    pygame.mixer.music.load("Musiques/Musique n5.wav")
     pygame.mixer.music.play(-1)
     adjacent_gauche = None
     adjacent_droite = None
     adjacent_haut = None
     adjacent_bas = None
     while suite == 5:
-        #mise en place du fond
-        fond = pygame.image.load("Hud.jpg").convert()
-        fenetre.blit(fond,(0,0))
-        #ecriture des textes
-        rendu_pv = font.render("PV :", 1, (255,0,0))
-        fenetre.blit(rendu_pv,(100,10))
-        point_vie = font.render(str(pv),1,(255,0,0))
-        slash = font.render("/",1,(255,0,0))
-        point_vie_max=font.render(str(pv_max),1,(255,0,0))
-        fenetre.blit(point_vie,(70,70))
-        fenetre.blit(point_vie_max,(160,70))
-        fenetre.blit(slash,(120,70))
-        ecris_niveau =font.render("Niveau",1,(255,0,0))
-        niveau = font.render(str(lvl),1,(255,0,0))
-        fenetre.blit(ecris_niveau,(80,130))
-        fenetre.blit(niveau,(180,130))
-        ecris_xp=font.render("XP :",1,(255,0,0))
-        experience = font.render(str(xp), 1, (255,0,0))
-        experience_demandee =font.render(str(xp_demande), 1, (255,0,0))
-        fenetre.blit(ecris_xp,(100,180))
-        fenetre.blit(experience,(70,230))
-        fenetre.blit(experience_demandee,(160,230))
-        fenetre.blit(slash,(120,230))
-        ecrit_be= font.render ("Berserk-touche 1",1,(255,0,0))
-        fenetre.blit(ecrit_be,(30,310))
-        dispo_be = font.render(str(affichage_be),1,(172,35,220))
-        fenetre.blit(dispo_be,(100,340))
-        ecrit_ca = font.render ("Corps d'acier-touche 2",1,(255,0,0))
-        fenetre.blit(ecrit_ca,(0,410))
-        dispo_ca = font.render(str(affichage_ca),1,(172,35,220))
-        fenetre.blit(dispo_ca,(100,440))
-        ecrit_aa = font.render ("Arme d'acier-touche 3",1,(255,0,0))
-        fenetre.blit(ecrit_aa,(0,510))
-        dispo_aa = font.render(str(affichage_aa),1,(172,35,220))
-        fenetre.blit(dispo_aa,(100,540))
-        ecrit_in = font.render ("Invisibilite-touche 4",1,(255,0,0))
-        fenetre.blit(ecrit_in,(30,610))
-        dispo_in = font.render(str(affichage_in),1,(172,35,220))
-        fenetre.blit(dispo_in,(100,640))
-        ecrit_soin = font.render ("Soin-touche 5",1,(255,0,0))
-        fenetre.blit(ecrit_soin,(70,710))
-        dispo_soin = font.render(str(affichage_soin),1,(172,35,220))
-        fenetre.blit(dispo_soin,(100,740))
+        hud()
         #initialisation de la carte
-        carte= Niveau("N5.txt")
+        carte= Niveau("Niveaux/N5.txt")
         carte.generer()
         carte.afficher(fenetre)
         pygame.display.flip()
@@ -710,14 +527,14 @@ while True:
                 if event.key==K_LEFT:
                     if adjacent_gauche !=None:
                         player.attack(adjacent_gauche)
-                    elif structure_niveau[player.y][player.x-1]='h':
+                    elif carte.structure[player.y][player.x-1]=='h':
                         player.moveleft
                         update()
                     
                 if event.key==K_UP:
                     if adjacent_haut != None:
                         player.attack(adjacent_haut)
-                    elif structure_niveau[player.y-1][player.x]='h':
+                    elif carte.structure[player.y-1][player.x]=='h':
                         player.moveup
                         update()
 
@@ -725,19 +542,34 @@ while True:
                 if event.key==K_DOWN:
                     if adjacent_bas != None:
                         player.attack(adjacent_bas)
-                    elif structure_niveau[player.y+1][player.x]='h':
+                    elif carte.structure[player.y+1][player.x]=='h':
                         player.movedown
                         update()
                       
                 if event.key==K_RIGHT:
                     if adjacent_droite != None:
                         player.attack(adjacent_droite)
-                    elif structure_niveau[player.y][player.x+1]='h':
+                    elif carte.structure[player.y][player.x+1]=='h':
                         player.moveright
                         update()
                     
                 if event.key==K_SPACE:
                     update()
+
+                if event.key ==K_1:
+                    berserk()
+                    
+                if event.key == K_2:
+                    corps_dacier()
+                    
+                if event.key == K_3:
+                    arme_dacier()
+                    
+                if evnet.key== K_4:
+                    invisibilite()
+                    
+                if event.key ==K_5:
+                    soin()
                     
         if gameover == 1:
             suite = 7                
@@ -746,7 +578,7 @@ while True:
         if player.x==29 and player.y==12: #and persephon mort:
             suite = 6
     while suite ==6:
-        fond = pygame.image.load("Gagne.jpg").convert()
+        fond = pygame.image.load("Images/Gagne.jpg").convert()
         fenetre.blit(fond,(0,0))
         fenetre.blit(ok, (800, 670))
         pygame.display.flip()
@@ -757,7 +589,7 @@ while True:
             
             
     while suite==7:
-        fond = pygame.image.load("Game over.jpg").convert()
+        fond = pygame.image.load("Images/Game over.jpg").convert()
         Recommencer = font2.render("Recommencer", 1, (255,0,0))
         fenetre.blit(fond,(0,0))
         fenetre.blit(Recommencer, (800, 670))
