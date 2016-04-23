@@ -9,7 +9,7 @@ class Player:
                 self.nextlevelxp = self.level*50
                 self.xp = 0
                 self.pv = 100
-                self.pv_max = 100
+                self.pvmax = 100
                 self.attaque = 1
                 self.defense = 1
                 self.vitesse = 1
@@ -32,19 +32,19 @@ class Player:
                 
         def moveup(self):
                 self.direction = self.up
-                self.y-=72
+                self.y-=1
 
         def movedown(self):
                 self.direction = self.down
-                self.y+=72
+                self.y+=1
 
         def moveleft(self):
                 self.direction = self.left
-                self.x-=72
+                self.x-=1
         
         def moveright(self):
                 self.direction = self.right
-                self.x+=72
+                self.x+=1
 
         def update(self):
                 if self.pv <= 0:
@@ -113,7 +113,7 @@ class Player:
                         echec = True
                         print "Echec !"
         def attack(self,mob_name):
-                mob_name.blesse(self)
+                mob_name.blesse()
 
 class Armure:
         def __init__(self):
@@ -220,13 +220,63 @@ class Mobs:
                         self.xp = 7
                 def update(self):
                         if self.pv <= 0:
-                                self.estmort = True
                                 player.xp += self.xp
+                                del(self)
+                        if player.x = self.x or player.y = self.y:
+                                if player.y - 1 = self.y
+                                        adjacent_bas = self
+                                        self.attack(player)
+                                if player.y + 1 = self.y:
+                                        adjacent_haut = self
+                                        self.attack(player)
+                                if player.x - 1 = self.x:
+                                        adjacent_droite = self
+                                        self.attack(player)
+                                if player.x + 1 = self.x:
+                                        adjacent_gauche = self
+                                        self.attack(player)
+                        else:
+                                for Mobs in mobslist:
+                                        if Mobs.y = self.y or Mobs.x = self.x:
+                                                if Mobs.y - 1 = self.y or Mobs.y + 1 = self.y or Mobs.x - 1 = self.x or Mobs.x + 1 = self.x:
+                                                        self.attack(Mobs)
+                                                        self.move = False
+                                                else:
+                                                        self.move = True
+                                        else:
+                                                self.move = True
+                                if self.move:
+                                        if randint(1,self.perception) > player.discretion:
+                                                self.diffx = abs(self.x - player.x)
+                                                self.diffy = abs(self.y - player.y)
+                                                if self.diffx > self.diffy:
+                                                        if self.x > player.x:
+                                                                self.moveleft()
+                                                        if self.x < player.x:
+                                                                self.moveright()
+                                                if self.diffx < self.diffy:
+                                                        if self.y > player.y:
+                                                                self.moveup()
+                                                        if self.y < player.y:
+                                                                self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
-                def blesse(self,player_name):
-                        if randint(1,30)<player_name.attaque:
+                        
+                def moveleft(self):
+                        if structure_niveau[self.y][self.x-1]='h':
+                                self.x -= 1
+                def moveright(self):
+                        if structure_niveau[self.y][self.x+1]='h':
+                                self.x += 1
+                def moveup(self):
+                        if structure_niveau[self.y-1][self.x]='h':
+                                self.y -= 1
+                def movedown(self):
+                        if structure_niveau[self.y+1][self.x]='h':
+                                self.x += 1
+                def blesse(self):
+                        if randint(1,30)<player.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        valeur = randint(1,player.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -238,6 +288,9 @@ class Mobs:
                         else:
                                 echec = True
                                 print "Echec !"
+                def attack(self):
+                        player.blesse(self)
+                        
 
         class Orc:
                 def __init__(self,x,y):
@@ -253,13 +306,80 @@ class Mobs:
                         self.xp = 8
                 def update(self):
                         if self.pv <= 0:
-                                self.estmort = True
                                 player.xp += self.xp
+                                del(self)
+                        if player.x = self.x or player.y = self.y:
+                                if player.y - 1 = self.y
+                                        adjacent_bas = self
+                                        self.attack(player)
+                                if player.y + 1 = self.y:
+                                        adjacent_haut = self
+                                        self.attack(player)
+                                if player.x - 1 = self.x:
+                                        adjacent_droite = self
+                                        self.attack(player)
+                                if player.x + 1 = self.x:
+                                        adjacent_gauche = self
+                                        self.attack(player)
+                        else:
+                                for Mobs in mobslist:
+                                        if Mobs.y = self.y or Mobs.x = self.x:
+                                                if Mobs.y - 1 = self.y or Mobs.y + 1 = self.y or Mobs.x - 1 = self.x or Mobs.x + 1 = self.x:
+                                                        self.attack(Mobs)
+                                                        self.move = False
+                                                else:
+                                                        self.move = True
+                                        else:
+                                                self.move = True
+                                if self.move:
+                                        if randint(1,self.perception) > player.discretion:
+                                                self.diffx = abs(self.x - player.x)
+                                                self.diffy = abs(self.y - player.y)
+                                                if self.diffx > self.diffy:
+                                                        if self.x > player.x:
+                                                                self.moveleft()
+                                                        if self.x < player.x:
+                                                                self.moveright()
+                                                if self.diffx < self.diffy:
+                                                        if self.y > player.y:
+                                                                self.moveup()
+                                                        if self.y < player.y:
+                                                                self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
-                def blesse(self,player_name):
-                        if randint(1,30)<player_name.attaque:
+                        
+                def moveleft(self):
+                        if structure_niveau[self.y][self.x-1]='h':
+                                self.x -= 1
+                def moveright(self):
+                        if structure_niveau[self.y][self.x+1]='h':
+                                self.x += 1
+                def moveup(self):
+                        if structure_niveau[self.y-1][self.x]='h':
+                                self.y -= 1
+                def movedown(self):
+                        if structure_niveau[self.y+1][self.x]='h':
+                                self.x += 1
+                def blesse(self):
+                        if randint(1,30)<player.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        valeur = randint(1,player.degat)-randint(1,self.defense)
+                                        print "Coup !"
+                                        if valeur > 0:
+                                                self.pv -= valeur
+                                        else:
+                                                self.pv -= 0
+                                else:
+                                        esquive = True
+                                        print "Esquive !"
+                        else:
+                                echec = True
+                                print "Echec !"
+                def attack(self):
+                        player.blesse(self)
+                def blesse(self,player):
+                        if randint(1,30)<player.attaque:
+                                if randint(1,30)>self.vitesse:
+                                        valeur = randint(1,player.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -286,13 +406,51 @@ class Mobs:
                         self.xp = 8
                 def update(self):
                         if self.pv <= 0:
-                                self.estmort = True
                                 player.xp += self.xp
+                                del(self)
+                        if player.x = self.x or player.y = self.y:
+                                if player.y - 1 = self.y
+                                        adjacent_bas = self
+                                        self.attack(player)
+                                if player.y + 1 = self.y:
+                                        adjacent_haut = self
+                                        self.attack(player)
+                                if player.x - 1 = self.x:
+                                        adjacent_droite = self
+                                        self.attack(player)
+                                if player.x + 1 = self.x:
+                                        adjacent_gauche = self
+                                        self.attack(player)
+                        else:
+                                for Mobs in mobslist:
+                                        if Mobs.y = self.y or Mobs.x = self.x:
+                                                if Mobs.y - 1 = self.y or Mobs.y + 1 = self.y or Mobs.x - 1 = self.x or Mobs.x + 1 = self.x:
+                                                        self.attack(Mobs)
+                                                        self.move = False
+                                                else:
+                                                        self.move = True
+                                        else:
+                                                self.move = True
+                                if self.move:
+                                        if randint(1,self.perception) > player.discretion:
+                                                self.diffx = abs(self.x - player.x)
+                                                self.diffy = abs(self.y - player.y)
+                                                if self.diffx > self.diffy:
+                                                        if self.x > player.x:
+                                                                self.moveleft()
+                                                        if self.x < player.x:
+                                                                self.moveright()
+                                                if self.diffx < self.diffy:
+                                                        if self.y > player.y:
+                                                                self.moveup()
+                                                        if self.y < player.y:
+                                                                self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
-                def blesse(self,player_name):
-                        if randint(1,30)<player_name.attaque:
+                        
+                def blesse(self,player):
+                        if randint(1,30)<player.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        valeur = randint(1,player.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -318,44 +476,51 @@ class Mobs:
                         self.xp = 9
                 def update(self):
                         if self.pv <= 0:
-                                self.estmort = True
                                 player.xp += self.xp
-                        fenetre.blit(self.image,(self.x,self.y))
-                def blesse(self,player_name):
-                        if randint(1,30)<player_name.attaque:
-                                if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
-                                        print "Coup !"
-                                        if valeur > 0:
-                                                self.pv -= valeur
-                                        else:
-                                                self.pv -= 0
-                                else:
-                                        esquive = True
-                                        print "Esquive !"
+                                del(self)
+                        if player.x = self.x or player.y = self.y:
+                                if player.y - 1 = self.y
+                                        adjacent_bas = self
+                                        self.attack(player)
+                                if player.y + 1 = self.y:
+                                        adjacent_haut = self
+                                        self.attack(player)
+                                if player.x - 1 = self.x:
+                                        adjacent_droite = self
+                                        self.attack(player)
+                                if player.x + 1 = self.x:
+                                        adjacent_gauche = self
+                                        self.attack(player)
                         else:
-                                echec = True
-                                print "Echec !"
-                def __init__(self,x,y):
-                        self.x = x
-                        self.y = y
-                        self.image = pygame.image.load("cavalier.png").convert_alpha()
-                        self.pv = 25
-                        self.vitesse = 20
-                        self.attaque = 21
-                        self.degat = 9
-                        self.defense = 15
-                        self.perception = 20
-                        self.xp = 12
-                def update(self):
-                        if self.pv <= 0:
-                                self.estmort = True
-                                player.xp += self.xp
+                                for Mobs in mobslist:
+                                        if Mobs.y = self.y or Mobs.x = self.x:
+                                                if Mobs.y - 1 = self.y or Mobs.y + 1 = self.y or Mobs.x - 1 = self.x or Mobs.x + 1 = self.x:
+                                                        self.attack(Mobs)
+                                                        self.move = False
+                                                else:
+                                                        self.move = True
+                                        else:
+                                                self.move = True
+                                if self.move:
+                                        if randint(1,self.perception) > player.discretion:
+                                                self.diffx = abs(self.x - player.x)
+                                                self.diffy = abs(self.y - player.y)
+                                                if self.diffx > self.diffy:
+                                                        if self.x > player.x:
+                                                                self.moveleft()
+                                                        if self.x < player.x:
+                                                                self.moveright()
+                                                if self.diffx < self.diffy:
+                                                        if self.y > player.y:
+                                                                self.moveup()
+                                                        if self.y < player.y:
+                                                                self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
-                def blesse(self,player_name):
-                        if randint(1,30)<player_name.attaque:
+                        
+                def blesse(self,player):
+                        if randint(1,30)<player.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        valeur = randint(1,player.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -381,13 +546,51 @@ class Mobs:
                         self.xp = 7
                 def update(self):
                         if self.pv <= 0:
-                                self.estmort = True
                                 player.xp += self.xp
+                                del(self)
+                        if player.x = self.x or player.y = self.y:
+                                if player.y - 1 = self.y
+                                        adjacent_bas = self
+                                        self.attack(player)
+                                if player.y + 1 = self.y:
+                                        adjacent_haut = self
+                                        self.attack(player)
+                                if player.x - 1 = self.x:
+                                        adjacent_droite = self
+                                        self.attack(player)
+                                if player.x + 1 = self.x:
+                                        adjacent_gauche = self
+                                        self.attack(player)
+                        else:
+                                for Mobs in mobslist:
+                                        if Mobs.y = self.y or Mobs.x = self.x:
+                                                if Mobs.y - 1 = self.y or Mobs.y + 1 = self.y or Mobs.x - 1 = self.x or Mobs.x + 1 = self.x:
+                                                        self.attack(Mobs)
+                                                        self.move = False
+                                                else:
+                                                        self.move = True
+                                        else:
+                                                self.move = True
+                                if self.move:
+                                        if randint(1,self.perception) > player.discretion:
+                                                self.diffx = abs(self.x - player.x)
+                                                self.diffy = abs(self.y - player.y)
+                                                if self.diffx > self.diffy:
+                                                        if self.x > player.x:
+                                                                self.moveleft()
+                                                        if self.x < player.x:
+                                                                self.moveright()
+                                                if self.diffx < self.diffy:
+                                                        if self.y > player.y:
+                                                                self.moveup()
+                                                        if self.y < player.y:
+                                                                self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
-                def blesse(self,player_name):
-                        if randint(1,30)<player_name.attaque:
+                        
+                def blesse(self,player):
+                        if randint(1,30)<player.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        valeur = randint(1,player.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -413,13 +616,51 @@ class Mobs:
                         self.xp = 8
                 def update(self):
                         if self.pv <= 0:
-                                self.estmort = True
                                 player.xp += self.xp
+                                del(self)
+                        if player.x = self.x or player.y = self.y:
+                                if player.y - 1 = self.y
+                                        adjacent_bas = self
+                                        self.attack(player)
+                                if player.y + 1 = self.y:
+                                        adjacent_haut = self
+                                        self.attack(player)
+                                if player.x - 1 = self.x:
+                                        adjacent_droite = self
+                                        self.attack(player)
+                                if player.x + 1 = self.x:
+                                        adjacent_gauche = self
+                                        self.attack(player)
+                        else:
+                                for Mobs in mobslist:
+                                        if Mobs.y = self.y or Mobs.x = self.x:
+                                                if Mobs.y - 1 = self.y or Mobs.y + 1 = self.y or Mobs.x - 1 = self.x or Mobs.x + 1 = self.x:
+                                                        self.attack(Mobs)
+                                                        self.move = False
+                                                else:
+                                                        self.move = True
+                                        else:
+                                                self.move = True
+                                if self.move:
+                                        if randint(1,self.perception) > player.discretion:
+                                                self.diffx = abs(self.x - player.x)
+                                                self.diffy = abs(self.y - player.y)
+                                                if self.diffx > self.diffy:
+                                                        if self.x > player.x:
+                                                                self.moveleft()
+                                                        if self.x < player.x:
+                                                                self.moveright()
+                                                if self.diffx < self.diffy:
+                                                        if self.y > player.y:
+                                                                self.moveup()
+                                                        if self.y < player.y:
+                                                                self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
-                def blesse(self,player_name):
-                        if randint(1,30)<player_name.attaque:
+                        
+                def blesse(self,player):
+                        if randint(1,30)<player.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        valeur = randint(1,player.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -445,13 +686,51 @@ class Mobs:
                         self.xp = 10
                 def update(self):
                         if self.pv <= 0:
-                                self.estmort = True
                                 player.xp += self.xp
+                                del(self)
+                        if player.x = self.x or player.y = self.y:
+                                if player.y - 1 = self.y
+                                        adjacent_bas = self
+                                        self.attack(player)
+                                if player.y + 1 = self.y:
+                                        adjacent_haut = self
+                                        self.attack(player)
+                                if player.x - 1 = self.x:
+                                        adjacent_droite = self
+                                        self.attack(player)
+                                if player.x + 1 = self.x:
+                                        adjacent_gauche = self
+                                        self.attack(player)
+                        else:
+                                for Mobs in mobslist:
+                                        if Mobs.y = self.y or Mobs.x = self.x:
+                                                if Mobs.y - 1 = self.y or Mobs.y + 1 = self.y or Mobs.x - 1 = self.x or Mobs.x + 1 = self.x:
+                                                        self.attack(Mobs)
+                                                        self.move = False
+                                                else:
+                                                        self.move = True
+                                        else:
+                                                self.move = True
+                                if self.move:
+                                        if randint(1,self.perception) > player.discretion:
+                                                self.diffx = abs(self.x - player.x)
+                                                self.diffy = abs(self.y - player.y)
+                                                if self.diffx > self.diffy:
+                                                        if self.x > player.x:
+                                                                self.moveleft()
+                                                        if self.x < player.x:
+                                                                self.moveright()
+                                                if self.diffx < self.diffy:
+                                                        if self.y > player.y:
+                                                                self.moveup()
+                                                        if self.y < player.y:
+                                                                self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
-                def blesse(self,player_name):
-                        if randint(1,30)<player_name.attaque:
+                        
+                def blesse(self,player):
+                        if randint(1,30)<player.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        valeur = randint(1,player.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -477,17 +756,54 @@ class Mobs:
                         self.xp = 50
                 def update(self):
                         if self.pv <= 0:
-                                self.estmort = True
                                 player.xp += self.xp
+                                del(self)
+                        if player.x = self.x or player.y = self.y:
+                                if player.y - 1 = self.y
+                                        adjacent_bas = self
+                                        self.attack(player)
+                                if player.y + 1 = self.y:
+                                        adjacent_haut = self
+                                        self.attack(player)
+                                if player.x - 1 = self.x:
+                                        adjacent_droite = self
+                                        self.attack(player)
+                                if player.x + 1 = self.x:
+                                        adjacent_gauche = self
+                                        self.attack(player)
+                        else:
+                                for Mobs in mobslist:
+                                        if Mobs.y = self.y or Mobs.x = self.x:
+                                                if Mobs.y - 1 = self.y or Mobs.y + 1 = self.y or Mobs.x - 1 = self.x or Mobs.x + 1 = self.x:
+                                                        self.attack(Mobs)
+                                                        self.move = False
+                                                else:
+                                                        self.move = True
+                                        else:
+                                                self.move = True
+                                if self.move:
+                                        if randint(1,self.perception) > player.discretion:
+                                                self.diffx = abs(self.x - player.x)
+                                                self.diffy = abs(self.y - player.y)
+                                                if self.diffx > self.diffy:
+                                                        if self.x > player.x:
+                                                                self.moveleft()
+                                                        if self.x < player.x:
+                                                                self.moveright()
+                                                if self.diffx < self.diffy:
+                                                        if self.y > player.y:
+                                                                self.moveup()
+                                                        if self.y < player.y:
+                                                                self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
                                 
-                def attack(self,player_name):
-                        player_name.blesse(self)
+                def attack(self,player):
+                        player.blesse(self)
         
-                def blesse(self,player_name):
-                        if randint(1,30)<player_name.attaque:
+                def blesse(self,player):
+                        if randint(1,30)<player.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player_name.degat)-randint(1,self.defense)
+                                        valeur = randint(1,player.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -500,3 +816,115 @@ class Mobs:
                                 echec = True
                                 print "Echec !"
                 
+class Spell:
+        def __init__(self):
+                self.duree = 0
+                self.attaque = 0
+                self.vitesse = 0
+                self.recharge = 0
+                self.degat = 0
+                self.actif = 0
+                self.dispo = 0
+                self.tempsecoule = 0
+        class Berserk:
+                def __init__(self):
+                        self.duree = 7 + player.magie
+                        self.recharge = 20 - player.magie
+                        player.attaque += 2
+                        player.vitesse += 2
+                        player.degat += 1
+                        self.actif = 0
+                        self.dispo = 1
+                        self.tempsecoule = 0
+                        self.tempsrecharge = 0
+                def update(self):
+                        if actif:
+                                self.tempsecoule += 1
+                        if self.tempsrecharge == self.recharge:
+                                self.tempsecoule = 0
+                                self.dispo = 1
+                        if self.tempsecoule >= self.duree:
+                                player.attaque -= 2
+                                player.vitesse -= 2
+                                player.degat -= 1
+                                self.actif = 0
+                                self.tempsrecharge += 1
+        class Corps_Dacier:
+                def __init__(self):
+                        self.duree = 7 + player.magie
+                        self.recharge = 30 - player.magie
+                        player.defense += 4
+                        self.actif = 0
+                        self.dispo = 1
+                        self.tempsecoule = 0
+                        self.tempsrecharge = 0
+                def update(self):
+                        if actif:
+                                self.tempsecoule += 1
+                        if self.tempsrecharge == self.recharge:
+                                self.tempsecoule = 0
+                                self.dispo = 1
+                        if self.tempsecoule >= self.duree:
+                                player.defense -= 4
+                                self.actif = 0
+                                self.tempsrecharge += 1
+                                
+        class Arme_Enflammee:
+                def __init__(self):
+                        self.duree = 7 + player.magie
+                        self.recharge = 30 - player.magie
+                        player.attaque += 4
+                        player.degat += 1
+                        self.actif = 0
+                        self.dispo = 1
+                        self.tempsecoule = 0
+                        self.tempsrecharge = 0
+                def update(self):
+                        if actif:
+                                self.tempsecoule += 1
+                        if self.tempsrecharge == self.recharge:
+                                self.tempsecoule = 0
+                                self.dispo = 1
+                        if self.tempsecoule >= self.duree:
+                                player.attaque -= 4
+                                player.degat -= 1
+                                self.actif = 0
+                                self.tempsrecharge += 1
+                                
+        class Invisibilite:
+                def __init__(self):
+                        self.duree = 10 + player.magie
+                        self.recharge = 10 - player.magie
+                        player.discretion += 30
+                        self.actif = 0
+                        self.dispo = 1
+                        self.tempsecoule = 0
+                        self.tempsrecharge = 0
+                def update(self):
+                        if actif:
+                                self.tempsecoule += 1
+                        if self.tempsrecharge == self.recharge:
+                                self.tempsecoule = 0
+                                self.dispo = 1
+                        if self.tempsecoule >= self.duree:
+                                player.discretion -= 30
+                                self.actif = 0
+                                self.tempsrecharge += 1
+                                
+        class Soin:
+                def __init__(self):
+                        self.recharge = 50 - player.magie
+                        player.pv = player.pvmax
+                        self.dispo = 1
+                        self.tempsrecharge = 0
+                def update(self):
+                        if not self.dispo:
+                                self.tempsrecharge += 1
+                        if self.tempsrecharge == self.recharge:
+                                self.dispo = 1
+                                self.tempsrecharge = 0
+                                
+                        
+                                
+                                
+                        

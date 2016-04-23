@@ -4,17 +4,63 @@ from pygame.locals import *
 from random import *
 from bibliotheque import *
 #definition des differentes actions possibles
-#lancer de dé 30
 
-def de_30 ():
-    de_30= randint(1,30)
+spellslist = []
+berserk = Spell.Berserk()
+corps_dacier = Spell.Corps_Dacier()
+arme_enflammee = Spell.Arme_Enflammee()
+invisibilite = Spell.Invisibilite()
+soin = Spell.Soin()
 
-#lancer du dé de degat
+spellslist.extend((berserk,corps_dacier,arme_enflamme,invisibilite,soin))
 
-def de_degat ():
-    de_degat = randint(1,degat)
+def spellsupdate():
+    for Spell in spellslist:
+        Spell.update()
 
-#incrementer le nombre de tour joués
+player = Player()
+
+
+mobslist = []
+loup1N1 = Mobs.Loup(11,8)
+loup2N1 = Mobs.Loup(41,10)
+loup3N1 = Mobs.Loup(36,22)
+loup4N1 = Mobs.Loup(12,23)
+loup5N1 = Mobs.Loup(42,25)
+loup6N1 = Mobs.Loup(12,27)
+loup7N1 = Mobs.Loup(47,29)
+loup8N1 = Mobs.Loup(43,37)
+loup9N1 = Mobs.Loup(16,41)
+loup10N1 = Mobs.Loup(25,45)
+loup1N2 = Mobs.Loup(27,40)
+loup2N2 = Mobs.Loup(32,40)
+loup1N4 = Mobs.Loup(22,9)
+loup2N4 = Mobs.Loup(34,43)
+loup3N4 = Mobs.Loup(39,49)
+loup1N5 = Mobs.Loup(23,43)
+loup2N5 = Mobs.Loup(27,43)
+loup3N5 = Mobs.Loup(31,43)
+loup4N5 = Mobs.Loup(32,43)
+mobslist.append(map(lambda x : x[1], filter(lambda x : x[0].startswith('loup'), globals().items())))
+orc1N1 = Mobs.Orc(47,18)
+orc2N1 = Mobs.Orc(30,29)
+orc3N1 = Mobs.Orc(14,32)
+orc4N1 = Mobs.Orc(28,10)
+orc5N1 = Mobs.Orc(34,13)
+orc6N1 = Mobs.Orc(11,17)
+
+def mobsupdate():
+    for Mobs in mobslist:
+        Mobs.update()
+
+
+def update():
+    mobsupdate()
+    spellsupdate()
+    player.update()
+
+
+#incrementer le nombre de tour jouÃ©s
 def tour_plus_un ():
     nombre_de_tour_score = nombre_de_tour_score + 1
     nombre_de_tour_be = nombre_de_tour_be + 1
@@ -30,13 +76,13 @@ class Niveau:
         self.fichier = fichier
         self.structure = 0
     def generer(self):
-        #ouverture du fichier dee niveau demandé
+        #ouverture du fichier dee niveau demandÃ©
         with open(self.fichier, "r")as fichier:
-            #création liste structure
+            #crÃ©ation liste structure
             structure_niveau=[]
             #lecture dans les lignes du fichier
             for ligne in fichier:
-                #création d'une liste des lignes
+                #crÃ©ation d'une liste des lignes
                 ligne_niveau=[]
                 #lecture de chaque sprite
                 for sprite in ligne:
@@ -68,16 +114,16 @@ class Niveau:
         num_ligne = 0
         #on lit chaque ligne de self structure
         for ligne in self.structure:
-            #si la ligne est située à 6 sur l'axe des y du heros on continue ce qui definit un champs de vision
+            #si la ligne est situÃ©e Ã  6 sur l'axe des y du heros on continue ce qui definit un champs de vision
             if num_ligne>y_heros -6 and num_ligne<y_heros+6:
                 case_affichee = 0
                 num_sprite = 0
                 #on lit dans les sprites
                 for sprite in ligne:
-                    #on définit x et y en fonction de la taille des sprites
+                    #on dÃ©finit x et y en fonction de la taille des sprites
                     x=(case_affichee* taille_sprite)+280
                     y=(ligne_affichee* taille_sprite)+10
-                    #si le sprite est situé a 6 sur l'axe des x on continue cela définit completemnt le champ de vision
+                    #si le sprite est situÃ© a 6 sur l'axe des x on continue cela dÃ©finit completemnt le champ de vision
                     if num_sprite>x_heros -6 and num_sprite<x_heros+6:
                         #on teste pour chaque sprite quelle lettre pour savoir quel ennemi ou texture afficher
                         if sprite =='l':
@@ -117,121 +163,11 @@ class Niveau:
                             fenetre.blit(centaure,(x,y))
                         elif sprite == 'r':
                             fenetre.blit(rien,(x,y))
-                        #on incrémente l'endroit ou sera affiché la case
+                        #on incrÃ©mente l'endroit ou sera affichÃ© la case
                         case_affichee = case_affichee + 1
-                    #on incrémente le numero du sprite testé pour évaluer si il se trouve dans le champ de vision
+                    #on incrÃ©mente le numero du sprite testÃ© pour Ã©valuer si il se trouve dans le champ de vision
                     num_sprite = num_sprite + 1
-                #on incrémente la ligne ou sera affiché la case
+                #on incrÃ©mente la ligne ou sera affichÃ© la case
                 ligne_affichee = ligne_affichee+1
-            #on incrémente la ligne testée pour évaluer si elle est dans le champ de vision
+            #on incrÃ©mente la ligne testÃ©e pour Ã©valuer si elle est dans le champ de vision
             num_ligne = num_ligne+1
-
-            
-                
-
-                
-
-#definition des differents sorts
-#berserk
-def berserk():                         #effet du sort
-    duree_be = 7 + magie
-    nombre_de_tour_be = 0
-    recharge_be = 20 - magie
-    attaque = attaque + 2
-    vitesse = vitesse + 2
-    degat = degat + 1
-    berserk = 0
-    action_be = 1
-    affichage_be="En cours"
-def fin_berserk():              #arret de l'effet au bout de la fin du sort
-    attaque = attaque - 2
-    vitesse = vitesse -2
-    degat = degat - 1
-    nombre_de_tour_be = 0
-    action_be=0
-    affichage_be="Indisponible"
-def recharge_berserk():         #retour positif du sort qui peut etre reutilisé
-    berserk = 1
-    affichage_be="Disponible"
-    
-
-
-
-#corps d'acier
-
-def corps_d_acier ():
-    duree_ca = 7 + magie
-    nombre_de_tour_ca = 0
-    recharge_ca = 30 - magie
-    defense = defense + 4
-    corps_d_acier = 0
-    action_ca = 1
-    affichage_ca="En cours"
-def fin_corps_d_acier():
-    defense = defense - 4
-    nombre_de_tour_be = 0
-    action_ce = 0
-    affichage_ca="Indisponible"
-def recharge_corps_d_acier():
-    corps_d_acier=1
-    affichage_ca="Disponible"
-
-#arme d'acier
-
-def arme_d_acier():
-    duree_aa=7+ magie
-    nombre_de_tour_aa = 0
-    recharge_aa=30 - magie
-    arme_d_acier = 0
-    action_aa = 1
-    attaque=attaque +4
-    degat=degat + 1
-    affichage_aa="En cours"
-def fin_arme_d_acier():
-    attaque = attaque - 4
-    degat = degat - 1
-    action_ca = 0
-    nombre_de_tour_aa = 0
-    affichage_aa="Indisponible"
-def recharge_arme_d_acier():
-    arme_d_acier = 1
-    affichage_aa="Disponible"
-
-
-#invisibilite
-
-def invisibilite():
-    duree_in = 10 + magie
-    nombre_de_tour_in = 0
-    recharge_in = 10 - magie
-    invisibilite = 0
-    action_in = 1
-    stealth = stealth + 30
-    affichage_in="En cours"
-def fin_invisibilite():
-    stealth = stealth - 30
-    nombre_de_tour_in = 0
-    action_in = 0
-    affichage_in="Indisponible"
-def recharge_invisibilite ():
-    invisibilite = 1
-    affichage_in="Disponible"
-    
-
-
-#soin
-
-def soin ():
-    recharge_soin = 50 - magie
-    nombre_de_tour_soin = 0
-    pv = pv_max
-    action_soin = 1
-    soin = 0
-    affichage_soin="Indisponible"
-def recharge_soin ():
-    soin = 1
-    affichage_soin="Disponible"
-        
-    
-        
-    
