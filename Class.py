@@ -6,6 +6,8 @@ from pygame.locals import*
 from bibliotheque import *
 import actions
 
+fenetre = pygame.display.set_mode((1083,812))
+
 Niveau = 0
 with open("carte.txt", "r")as fichier:
     for ligne in fichier:
@@ -20,8 +22,6 @@ with open("carte.txt", "r")as fichier:
                 Niveau = 4
             if sprite=="5":
                 Niveau = 5
-
-fenetre = pygame.display.set_mode((1024,768))
 
 class Player:
         def __init__(self):
@@ -90,6 +90,11 @@ class Player:
                         self.nextlevel = True
                 if self.nextlevel:
                         self.levelup()
+                print self.attaque
+                print self.defense
+                print self.discretion
+                print self.degat
+                print self.magie
         
         def equiper_armure(self,armure):
                 if self.hasarmure:

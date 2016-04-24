@@ -14,7 +14,7 @@ pygame.display.set_caption("Trapped!")
 
 while 1:
     #mise en place de la fenetre
-    fenetre = pygame.display.set_mode((1083,812),RESIZABLE)
+    fenetre = pygame.display.set_mode((1083,812))
     fond = pygame.image.load("Images/FOND.jpg").convert()
     fenetre.blit(fond,(0,0))
     pygame.display.flip()
@@ -37,7 +37,7 @@ while 1:
             rendu_titre = font3.render("Trapped!",1,(255,0,0))
             fenetre.blit(rendu_titre,(100,77))
             pygame.display.flip()
-            for  event in pygame.event.get():
+            for event in pygame.event.get():
                 if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>794 and event.pos[0]<910 and event.pos[1]<524 and event.pos[1]>465 :
                     choix = 1 # Jouer
                 if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>794 and event.pos[0]<1024 and event.pos[1]<597 and event.pos[1]>562 :
@@ -242,14 +242,14 @@ while 1:
                     if adjacent_gauche !=None:
                         player.attack(adjacent_gauche)
                     elif carte.structure[player.y][player.x-1]=='h':
-                        player.moveleft
+                        player.moveleft()
                         update()
                     
                 if event.key==K_UP:
                     if adjacent_haut != None:
                         player.attack(adjacent_haut)
                     elif carte.structure[player.y-1][player.x]=='h':
-                        player.moveup
+                        player.moveup()
                         update()
 
                       
@@ -257,14 +257,14 @@ while 1:
                     if adjacent_bas != None:
                         player.attack(adjacent_bas)
                     elif carte.structure[player.y+1][player.x]=='h':
-                        player.movedown
+                        player.movedown()
                         update()
                       
                 if event.key==K_RIGHT:
                     if adjacent_droite != None:
                         player.attack(adjacent_droite)
                     elif carte.structure[player.y][player.x+1]=='h':
-                        player.moveright
+                        player.moveright()
                         update()
                         
                 if event.key==K_SPACE:
@@ -272,19 +272,19 @@ while 1:
 
 
                 if event.key ==K_1:
-                    berserk()
+                    berserk.lancer()
                     
                 if event.key == K_2:
-                    corps_dacier()
+                    corps_dacier.lancer()
                     
                 if event.key == K_3:
-                    arme_dacier()
+                    arme_enflammee.lancer()
                     
                 if event.key== K_4:
-                    invisibilite()
+                    invisibilite.lancer()
                     
                 if event.key ==K_5:
-                    soin()
+                    soin.lancer()
                       
         if gameover == 1:
             suite = 7                
@@ -321,14 +321,14 @@ while 1:
                     if adjacent_gauche !=None:
                         player.attack(adjacent_gauche)
                     elif carte.structure[player.y][player.x-1]=='h':
-                        player.moveleft
+                        player.moveleft()
                         update()
                     
                 if event.key==K_UP:
                     if adjacent_haut != None:
                         player.attack(adjacent_haut)
                     elif carte.structure[player.y-1][player.x]=='h':
-                        player.moveup
+                        player.moveup()
                         update()
 
                       
@@ -336,33 +336,33 @@ while 1:
                     if adjacent_bas != None:
                         player.attack(adjacent_bas)
                     elif carte.structure[player.y+1][player.x]=='h':
-                        player.movedown
+                        player.movedown()
                         update()
                       
                 if event.key==K_RIGHT:
                     if adjacent_droite != None:
                         player.attack(adjacent_droite)
                     elif carte.structure[player.y][player.x+1]=='h':
-                        player.moveright
+                        player.moveright()
                         update()
                     
                 if event.key==K_SPACE:
                     update()
 
                 if event.key ==K_1:
-                    berserk()
+                    berserk.lancer()
                     
                 if event.key == K_2:
-                    corps_dacier()
+                    corps_dacier.lancer()
                     
                 if event.key == K_3:
-                    arme_dacier()
+                    arme_enflammee.lancer()
                     
                 if event.key== K_4:
-                    invisibilite()
+                    invisibilite.lancer()
                     
                 if event.key ==K_5:
-                    soin()
+                    soin.lancer()
                     
         if gameover == 1:
             suite = 7
@@ -399,14 +399,14 @@ while 1:
                     if adjacent_gauche !=None:
                         player.attack(adjacent_gauche)
                     elif carte.structure[player.y][player.x-1]=='h':
-                        player.moveleft
+                        player.moveleft()
                         update()
                     
                 if event.key==K_UP:
                     if adjacent_haut != None:
                         player.attack(adjacent_haut)
                     elif carte.structure[player.y-1][player.x]=='h':
-                        player.moveup
+                        player.moveup()
                         update()
 
                       
@@ -414,33 +414,33 @@ while 1:
                     if adjacent_bas != None:
                         player.attack(adjacent_bas)
                     elif carte.structure[player.y+1][player.x]=='h':
-                        player.movedown
+                        player.movedown()
                         update()
                       
                 if event.key==K_RIGHT:
                     if adjacent_droite != None:
                         player.attack(adjacent_droite)
                     elif carte.structure[player.y][player.x+1]=='h':
-                        player.moveright
+                        player.moveright()
                         update()
                     
                 if event.key==K_SPACE:
                     update()
 
                 if event.key ==K_1:
-                    berserk()
+                    berserk.lancer()
                     
                 if event.key == K_2:
-                    corps_dacier()
+                    corps_dacier.lancer()
                     
                 if event.key == K_3:
-                    arme_dacier()
+                    arme_enflammee.lancer()
                     
                 if event.key== K_4:
-                    invisibilite()
+                    invisibilite.lancer()
                     
                 if event.key ==K_5:
-                    soin()
+                    soin.lancer()
                     
         if gameover == 1:
             suite = 7                
@@ -477,14 +477,14 @@ while 1:
                     if adjacent_gauche !=None:
                         player.attack(adjacent_gauche)
                     elif carte.structure[player.y][player.x-1]=='h':
-                        player.moveleft
+                        player.moveleft()
                         update()
                     
                 if event.key==K_UP:
                     if adjacent_haut != None:
                         player.attack(adjacent_haut)
                     elif carte.structure[player.y-1][player.x]=='h':
-                        player.moveup
+                        player.moveup()
                         update()
 
                       
@@ -492,33 +492,33 @@ while 1:
                     if adjacent_bas != None:
                         player.attack(adjacent_bas)
                     elif carte.structure[player.y+1][player.x]=='h':
-                        player.movedown
+                        player.movedown()
                         update()
                       
                 if event.key==K_RIGHT:
                     if adjacent_droite != None:
                         player.attack(adjacent_droite)
                     elif carte.structure[player.y][player.x+1]=='h':
-                        player.moveright
+                        player.moveright()
                         update()
                     
                 if event.key==K_SPACE:
                     update()
 
                 if event.key ==K_1:
-                    berserk()
+                    berserk.lancer()
                     
                 if event.key == K_2:
-                    corps_dacier()
+                    corps_dacier.lancer()
                     
                 if event.key == K_3:
-                    arme_dacier()
+                    arme_enflammee.lancer()
                     
                 if event.key== K_4:
-                    invisibilite()
+                    invisibilite.lancer()
                     
                 if event.key ==K_5:
-                    soin()
+                    soin.lancer()
                     
         if gameover == 1:
             suite = 7
@@ -555,14 +555,14 @@ while 1:
                     if adjacent_gauche !=None:
                         player.attack(adjacent_gauche)
                     elif carte.structure[player.y][player.x-1]=='h':
-                        player.moveleft
+                        player.moveleft()
                         update()
                     
                 if event.key==K_UP:
                     if adjacent_haut != None:
                         player.attack(adjacent_haut)
                     elif carte.structure[player.y-1][player.x]=='h':
-                        player.moveup
+                        player.moveup()
                         update()
 
                       
@@ -570,33 +570,33 @@ while 1:
                     if adjacent_bas != None:
                         player.attack(adjacent_bas)
                     elif carte.structure[player.y+1][player.x]=='h':
-                        player.movedown
+                        player.movedown()
                         update()
                       
                 if event.key==K_RIGHT:
                     if adjacent_droite != None:
                         player.attack(adjacent_droite)
                     elif carte.structure[player.y][player.x+1]=='h':
-                        player.moveright
+                        player.moveright()
                         update()
                     
                 if event.key==K_SPACE:
                     update()
 
                 if event.key ==K_1:
-                    berserk()
+                    berserk.lancer()
                     
                 if event.key == K_2:
-                    corps_dacier()
+                    corps_dacier.lancer()
                     
                 if event.key == K_3:
-                    arme_dacier()
+                    arme_enflammee.lancer()
                     
                 if event.key== K_4:
-                    invisibilite()
+                    invisibilite.lancer()
                     
                 if event.key ==K_5:
-                    soin()
+                    soin.lancer()
                     
         if gameover == 1:
             suite = 7                
