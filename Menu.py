@@ -213,7 +213,7 @@ while 1:
                         menu = 0
                         #entree dans la nouvelle boucle
                         suite = 1
-
+    update()
     #boucle du niveau 1
     #musique du niveau
     pygame.mixer.music.load("Musiques/Musique n1.wav")
@@ -225,7 +225,10 @@ while 1:
     while suite==1:
         hud()
         #initialisation de la carte
-        carte = Niveau("Niveaux/N1.txt")
+        def_niveau = open("carte.txt", "w")
+        def_niveau.write("1")
+        def_niveau.close
+        carte=carte1
         carte.generer()
         carte.afficher(fenetre)
         pygame.display.flip()
@@ -300,7 +303,10 @@ while 1:
     while suite ==2:
         hud()
         #initialisation de la carte
-        carte= Niveau("Niveaux/N2.txt")
+        def_niveau = open("carte.txt", "w")
+        def_niveau.write("2")
+        def_niveau.close
+        carte=carte2
         carte.generer()
         carte.afficher(fenetre)
         pygame.display.flip()
@@ -375,7 +381,10 @@ while 1:
     while suite == 3:
         hud()
         #initialisation de la carte
-        carte= Niveau("Niveaux/N3.txt")
+        def_niveau = open("carte.txt", "w")
+        def_niveau.write("3")
+        def_niveau.close
+        carte=carte3
         carte.generer()
         carte.afficher(fenetre)
         pygame.display.flip()
@@ -450,7 +459,10 @@ while 1:
     while suite==4:
         hud()
         #initialisation de la carte
-        carte= Niveau("Niveaux/N4.txt")
+        def_niveau = open("carte.txt", "w")
+        def_niveau.write("4")
+        def_niveau.close
+        carte=carte4
         carte.generer()
         carte.afficher(fenetre)
         pygame.display.flip()
@@ -525,7 +537,10 @@ while 1:
     while suite == 5:
         hud()
         #initialisation de la carte
-        carte= Niveau("Niveaux/N5.txt")
+        def_niveau = open("carte.txt", "w")
+        def_niveau.write("5")
+        def_niveau.close
+        carte=carte5
         carte.generer()
         carte.afficher(fenetre)
         pygame.display.flip()

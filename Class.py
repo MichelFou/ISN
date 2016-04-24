@@ -4,8 +4,22 @@ pygame.init()
 from random import *
 from pygame.locals import*
 from bibliotheque import *
-#from Menu import *
-from actions import *
+import actions
+
+Niveau = 0
+with open("carte.txt", "r")as fichier:
+    for ligne in fichier:
+        for sprite in ligne:
+            if sprite =="1":
+                Niveau = 1
+            if sprite =="2":
+                Niveau = 2
+            if sprite == "3":
+                Niveau = 3
+            if sprite == "4":
+                Niveau = 4
+            if sprite=="5":
+                Niveau = 5
 
 fenetre = pygame.display.set_mode((1024,768))
 
@@ -34,7 +48,8 @@ class Player:
                 self.left = pygame.image.load("Images/Hero-left.png")
                 self.right = pygame.image.load("Images/Hero-right.png")
                 self.direction = self.up
-                self.image = self.direction                
+                self.image = self.direction
+                self.nextlevel = False
                 
         def moveup(self):
                 self.direction = self.up
@@ -52,29 +67,29 @@ class Player:
                 self.direction = self.right
                 self.x+=1
 
-        def update(self):
-                if self.pv <= 0:
-                        self.estmort = True
-                        gameover = True
-                fenetre.blit(self.image,(self.x,self.y))
-                if self.xp == nextlevelxp:
-                        self.xp = 0
-                        levelup = True
-                if self.xp > nextlevelxp:
-                        self.xp -= self.nextlevelxp
-                        levelup = True
-                if levelup:
-                        self.levelup()
-                        
         def levelup(self):
                 self.pv += 5
-                self.pv_max += 5
+                self.pvmax += 5
                 self.attaque += 1
                 self.defense += 1
                 self.vitesse += 1
                 self.magie += 1
                 self.degat += 1
                 self.discretion += 1
+
+        def update(self):
+                if self.pv <= 0:
+                        self.estmort = True
+                        gameover = True
+                fenetre.blit(self.image,(self.x,self.y))
+                if self.xp == self.nextlevelxp:
+                        self.xp = 0
+                        self.levelup = True
+                if self.xp > self.nextlevelxp:
+                        self.xp -= self.nextlevelxp
+                        self.nextlevel = True
+                if self.nextlevel:
+                        self.levelup()
         
         def equiper_armure(self,armure):
                 if self.hasarmure:
@@ -212,6 +227,7 @@ class Mobs:
                 self.xp = 0
                 self.x = 0
                 self.y = 0
+                self.move = False
         class Loup:
                 def __init__(self,x,y):
                         self.x = x
@@ -224,6 +240,7 @@ class Mobs:
                         self.defense = 7
                         self.perception = 20
                         self.xp = 7
+                        self.move = False
                 def update(self):
                         if self.pv <= 0:
                                 player.xp += self.xp
@@ -242,6 +259,7 @@ class Mobs:
                                         adjacent_gauche = self
                                         self.attack(player)
                         else:
+                                mobsniveau()
                                 for mobs in mobslist:
                                         if mobs.y == self.y or mobs.x == self.x:
                                                 if mobs.y - 1 == self.y or mobs.y + 1 == self.y or mobs.x - 1 == self.x or mobs.x + 1 == self.x:
@@ -268,16 +286,16 @@ class Mobs:
                         fenetre.blit(self.image,(self.x,self.y))
                         
                 def moveleft(self):
-                        if carte.structure[self.y][self.x-1]=='h':
+                        if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
                 def moveright(self):
-                        if carte.structure[self.y][self.x+1]=='h':
+                        if actions.carte.structure[self.y][self.x+1]=='h':
                                 self.x += 1
                 def moveup(self):
-                        if carte.structure[self.y-1][self.x]=='h':
+                        if actions.carte.structure[self.y-1][self.x]=='h':
                                 self.y -= 1
                 def movedown(self):
-                        if carte.structure[self.y+1][self.x]=='h':
+                        if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
                 def blesse(self):
                         if randint(1,30)<player.attaque:
@@ -310,6 +328,7 @@ class Mobs:
                         self.defense = 8
                         self.perception = 20
                         self.xp = 8
+                        self.move = False
                 def update(self):
                         if self.pv <= 0:
                                 player.xp += self.xp
@@ -328,6 +347,7 @@ class Mobs:
                                         adjacent_gauche = self
                                         self.attack(player)
                         else:
+                                mobsniveau()
                                 for mobs in mobslist:
                                         if mobs.y == self.y or mobs.x == self.x:
                                                 if mobs.y - 1 == self.y or mobs.y + 1 == self.y or mobs.x - 1 == self.x or mobs.x + 1 == self.x:
@@ -354,16 +374,16 @@ class Mobs:
                         fenetre.blit(self.image,(self.x,self.y))
                         
                 def moveleft(self):
-                        if carte.structure[self.y][self.x-1]=='h':
+                        if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
                 def moveright(self):
-                        if carte.structure[self.y][self.x+1]=='h':
+                        if actions.carte.structure[self.y][self.x+1]=='h':
                                 self.x += 1
                 def moveup(self):
-                        if carte.structure[self.y-1][self.x]=='h':
+                        if actions.carte.structure[self.y-1][self.x]=='h':
                                 self.y -= 1
                 def movedown(self):
-                        if carte.structure[self.y+1][self.x]=='h':
+                        if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
                 def blesse(self):
                         if randint(1,30)<player.attaque:
@@ -395,6 +415,7 @@ class Mobs:
                         self.defense = 8
                         self.perception = 10
                         self.xp = 8
+                        self.move = False
                 def update(self):
                         if self.pv <= 0:
                                 player.xp += self.xp
@@ -413,6 +434,7 @@ class Mobs:
                                         adjacent_gauche = self
                                         self.attack(player)
                         else:
+                                mobsniveau()
                                 for mobs in mobslist:
                                         if mobs.y == self.y or mobs.x == self.x:
                                                 if mobs.y - 1 == self.y or mobs.y + 1 == self.y or mobs.x - 1 == self.x or mobs.x + 1 == self.x:
@@ -438,16 +460,16 @@ class Mobs:
                                                                 self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
                 def moveleft(self):
-                        if carte.structure[self.y][self.x-1]=='h':
+                        if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
                 def moveright(self):
-                        if carte.structure[self.y][self.x+1]=='h':
+                        if actions.carte.structure[self.y][self.x+1]=='h':
                                 self.x += 1
                 def moveup(self):
-                        if carte.structure[self.y-1][self.x]=='h':
+                        if actions.carte.structure[self.y-1][self.x]=='h':
                                 self.y -= 1
                 def movedown(self):
-                        if carte.structure[self.y+1][self.x]=='h':
+                        if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
                 def attack(self):
                         player.blesse(self)
@@ -479,6 +501,7 @@ class Mobs:
                         self.defense = 10
                         self.perception = 17
                         self.xp = 9
+                        self.move = False
                 def update(self):
                         if self.pv <= 0:
                                 player.xp += self.xp
@@ -497,6 +520,7 @@ class Mobs:
                                         adjacent_gauche = self
                                         self.attack(player)
                         else:
+                                mobsniveau()
                                 for mobs in mobslist:
                                         if mobs.y == self.y or mobs.x == self.x:
                                                 if mobs.y - 1 == self.y or mobs.y + 1 == self.y or mobs.x - 1 == self.x or mobs.x + 1 == self.x:
@@ -540,16 +564,16 @@ class Mobs:
                 def attack(self):
                         player.blesse(self)
                 def moveleft(self):
-                        if carte.structure[self.y][self.x-1]=='h':
+                        if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
                 def moveright(self):
-                        if carte.structure[self.y][self.x+1]=='h':
+                        if actions.carte.structure[self.y][self.x+1]=='h':
                                 self.x += 1
                 def moveup(self):
-                        if carte.structure[self.y-1][self.x]=='h':
+                        if actions.carte.structure[self.y-1][self.x]=='h':
                                 self.y -= 1
                 def movedown(self):
-                        if carte.structure[self.y+1][self.x]=='h':
+                        if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
         class Mort_vivant:
                 def __init__(self,x,y):
@@ -563,6 +587,7 @@ class Mobs:
                         self.defense = 8
                         self.perception = 10
                         self.xp = 7
+                        self.move = False
                 def update(self):
                         if self.pv <= 0:
                                 player.xp += self.xp
@@ -581,6 +606,7 @@ class Mobs:
                                         adjacent_gauche = self
                                         self.attack(player)
                         else:
+                                mobsniveau()
                                 for mobs in mobslist:
                                         if mobs.y == self.y or mobs.x == self.x:
                                                 if mobs.y - 1 == self.y or mobs.y + 1 == self.y or mobs.x - 1 == self.x or mobs.x + 1 == self.x:
@@ -624,16 +650,16 @@ class Mobs:
                 def attack(self):
                         player.blesse(self)
                 def moveleft(self):
-                        if carte.structure[self.y][self.x-1]=='h':
+                        if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
                 def moveright(self):
-                        if carte.structure[self.y][self.x+1]=='h':
+                        if actions.carte.structure[self.y][self.x+1]=='h':
                                 self.x += 1
                 def moveup(self):
-                        if carte.structure[self.y-1][self.x]=='h':
+                        if actions.carte.structure[self.y-1][self.x]=='h':
                                 self.y -= 1
                 def movedown(self):
-                        if carte.structure[self.y+1][self.x]=='h':
+                        if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
         class Squelette:
                 def __init__(self,x,y):
@@ -647,6 +673,7 @@ class Mobs:
                         self.defense = 6
                         self.perception = 15
                         self.xp = 8
+                        self.move = False
                 def update(self):
                         if self.pv <= 0:
                                 player.xp += self.xp
@@ -665,6 +692,7 @@ class Mobs:
                                         adjacent_gauche = self
                                         self.attack(player)
                         else:
+                                mobsniveau()
                                 for mobs in mobslist:
                                         if mobs.y == self.y or mobs.x == self.x:
                                                 if mobs.y - 1 == self.y or mobs.y + 1 == self.y or mobs.x - 1 == self.x or mobs.x + 1 == self.x:
@@ -708,16 +736,16 @@ class Mobs:
                 def attack(self):
                         player.blesse(self)
                 def moveleft(self):
-                        if carte.structure[self.y][self.x-1]=='h':
+                        if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
                 def moveright(self):
-                        if carte.structure[self.y][self.x+1]=='h':
+                        if actions.carte.structure[self.y][self.x+1]=='h':
                                 self.x += 1
                 def moveup(self):
-                        if carte.structure[self.y-1][self.x]=='h':
+                        if actions.carte.structure[self.y-1][self.x]=='h':
                                 self.y -= 1
                 def movedown(self):
-                        if carte.structure[self.y+1][self.x]=='h':
+                        if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
         class Araignee:
                 def __init__(self,x,y):
@@ -731,6 +759,7 @@ class Mobs:
                         self.defense = 10
                         self.perception = 17
                         self.xp = 10
+                        self.move = False
                 def update(self):
                         if self.pv <= 0:
                                 player.xp += self.xp
@@ -749,6 +778,7 @@ class Mobs:
                                         adjacent_gauche = self
                                         self.attack(player)
                         else:
+                                mobsniveau()
                                 for mobs in mobslist:
                                         if mobs.y == self.y or mobs.x == self.x:
                                                 if mobs.y - 1 == self.y or mobs.y + 1 == self.y or mobs.x - 1 == self.x or mobs.x + 1 == self.x:
@@ -792,16 +822,16 @@ class Mobs:
                 def attack(self):
                         player.blesse(self)
                 def moveleft(self):
-                        if carte.structure[self.y][self.x-1]=='h':
+                        if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
                 def moveright(self):
-                        if carte.structure[self.y][self.x+1]=='h':
+                        if actions.carte.structure[self.y][self.x+1]=='h':
                                 self.x += 1
                 def moveup(self):
-                        if carte.structure[self.y-1][self.x]=='h':
+                        if actions.carte.structure[self.y-1][self.x]=='h':
                                 self.y -= 1
                 def movedown(self):
-                        if carte.structure[self.y+1][self.x]=='h':
+                        if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
         class Persephon:
                 def __init__(self,x,y):
@@ -815,6 +845,7 @@ class Mobs:
                         self.defense = 15
                         self.perception = 30
                         self.xp = 50
+                        self.move = False
                 def update(self):
                         if self.pv <= 0:
                                 player.xp += self.xp
@@ -833,6 +864,7 @@ class Mobs:
                                         adjacent_gauche = self
                                         self.attack(player)
                         else:
+                                mobsniveau()
                                 for mobs in mobslist:
                                         if mobs.y == self.y or mobs.x == self.x:
                                                 if mobs.y - 1 == self.y or mobs.y + 1 == self.y or mobs.x - 1 == self.x or mobs.x + 1 == self.x:
@@ -858,16 +890,16 @@ class Mobs:
                                                                 self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
                 def moveleft(self):
-                        if carte.structure[self.y][self.x-1]=='h':
+                        if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
                 def moveright(self):
-                        if carte.structure[self.y][self.x+1]=='h':
+                        if actions.carte.structure[self.y][self.x+1]=='h':
                                 self.x += 1
                 def moveup(self):
-                        if carte.structure[self.y-1][self.x]=='h':
+                        if actions.carte.structure[self.y-1][self.x]=='h':
                                 self.y -= 1
                 def movedown(self):
-                        if carte.structure[self.y+1][self.x]=='h':
+                        if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
                                 
                 def attack(self,player):
@@ -918,6 +950,7 @@ class Mobs:
                                         adjacent_gauche = self
                                         self.attack(player)
                         else:
+                                mobsniveau()
                                 for mobs in mobslist:
                                         if mobs.y == self.y or mobs.x == self.x:
                                                 if mobs.y - 1 == self.y or mobs.y + 1 == self.y or mobs.x - 1 == self.x or mobs.x + 1 == self.x:
@@ -943,16 +976,16 @@ class Mobs:
                                                                 self.movedown()
                         fenetre.blit(self.image,(self.x,self.y))
                 def moveleft(self):
-                        if carte.structure[self.y][self.x-1]=='h':
+                        if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
                 def moveright(self):
-                        if carte.structure[self.y][self.x+1]=='h':
+                        if actions.carte.structure[self.y][self.x+1]=='h':
                                 self.x += 1
                 def moveup(self):
-                        if carte.structure[self.y-1][self.x]=='h':
+                        if actions.carte.structure[self.y-1][self.x]=='h':
                                 self.y -= 1
                 def movedown(self):
-                        if carte.structure[self.y+1][self.x]=='h':
+                        if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
                                 
                 def attack(self,player):
@@ -1020,7 +1053,7 @@ class Spell:
                         self.tempsecoule = 0
                         self.tempsrecharge = 0
                 def update(self):
-                        if actif:
+                        if self.actif:
                                 self.tempsecoule += 1
                         if self.tempsrecharge >= self.recharge:
                                 self.tempsecoule = 0
@@ -1044,7 +1077,7 @@ class Spell:
                         self.tempsecoule = 0
                         self.tempsrecharge = 0
                 def update(self):
-                        if actif:
+                        if self.actif:
                                 self.tempsecoule += 1
                         if self.tempsrecharge >= self.recharge:
                                 self.tempsecoule = 0
@@ -1070,7 +1103,7 @@ class Spell:
                         self.tempsecoule = 0
                         self.tempsrecharge = 0
                 def update(self):
-                        if actif:
+                        if self.actif:
                                 self.tempsecoule += 1
                         if self.tempsrecharge >= self.recharge:
                                 self.tempsecoule = 0
@@ -1106,22 +1139,27 @@ class Spell:
                                 
                         
 player = Player()
-
+spell = Spell()
 spellslist = []
-berserk = Spell.Berserk()
-corps_dacier = Spell.Corps_Dacier()
-arme_enflammee = Spell.Arme_Enflammee()
-invisibilite = Spell.Invisibilite()
-soin = Spell.Soin()
+berserk = spell.Berserk()
+corps_dacier = spell.Corps_Dacier()
+arme_enflammee = spell.Arme_Enflammee()
+invisibilite = spell.Invisibilite()
+soin = spell.Soin()
 
 spellslist.extend((berserk,corps_dacier,arme_enflammee,invisibilite,soin))
 
 def spellsupdate():
-    for Spell in spellslist:
-        Spell.update()
+    for spell in spellslist:
+        spell.update()
 
 mobs = Mobs()
 
+mobsN1 = []
+mobsN2 = []
+mobsN3 = []
+mobsN4 = []
+mobsN5 = []
 mobslist = []
 loup1N1 = mobs.Loup(11,8)
 loup2N1 = mobs.Loup(41,10)
@@ -1238,7 +1276,7 @@ orc7N3 = mobs.Orc(50,34)
 orc8N3 = mobs.Orc(49,37)
 orc1N4 = mobs.Orc(46,8)
 orc2N4 = mobs.Orc(16,17)
-orc1N4 = mobs.Orc(49,36)
+orc1N5 = mobs.Orc(49,36)
 orc2N5 = mobs.Orc(13,33)
 orc3N5 = mobs.Orc(36,33)
 gobelin1N2 = mobs.Gobelin(9,18)
@@ -1265,16 +1303,54 @@ gobelin5N4 = mobs.Gobelin(40,29)
 gobelin6N4 = mobs.Gobelin(46,29)
 persephon = mobs.Persephon(29,16)
 
+mobsN1.extend((loup1N1,loup2N1,loup3N1,loup4N1,loup5N1,loup6N1,loup7N1,loup8N1,loup9N1,loup10N1,orc1N1,orc2N1,orc3N1,orc4N1,orc4N1,orc5N1,orc6N1))
+mobsN2.extend((loup1N2,loup2N2,squelette1N2,squelette1N2,squelette3N2,squelette4N2,squelette5N2,squelette6N2,squelette7N2,centaure1N2,centaure2N2,cavalier1N2,mort_vivant1N2,mort_vivant2N2,mort_vivant3N2,mort_vivant4N2,mort_vivant5N2,mort_vivant6N2,mort_vivant7N2,mort_vivant8N2,mort_vivant9N2,mort_vivant10N2,araignee1N2,araignee2N2,araignee3N2,araignee4N2,araignee5N2,araignee6N2,araignee7N2,araignee8N2,araignee9N2,araignee10N2,gobelin1N2,gobelin2N2,gobelin3N2,gobelin4N2,gobelin5N2,gobelin6N2))
+mobsN3.extend((squelette1N3,squelette2N3,squelette3N3,squelette4N3,squelette5N3,squelette6N3,squelette7N3,centaure1N3,centaure2N3,centaure3N3,centaure4N3,mort_vivant1N3,araignee1N3,araignee2N3,orc1N3,orc2N3,orc3N3,orc4N3,orc5N3,orc6N3,orc7N3,orc8N3,gobelin1N3,gobelin2N3,gobelin3N3,gobelin4N3,gobelin5N3,gobelin6N3,gobelin7N3,gobelin8N3,gobelin9N3,gobelin10N3))
+mobsN4.extend((loup1N4,loup2N4,loup3N4,squelette1N4,squelette2N4,squelette3N4,squelette4N4,squelette5N4,squelette6N4,squelette7N4,squelette8N4,centaure1N4,centaure2N4,centaure3N4,cavalier1N4,cavalier2N4,cavalier3N4,cavalier4N4,cavalier5N4,cavalier6N4,mort_vivant1N4,mort_vivant2N4,araignee1N4,araignee2N4,orc1N4,orc2N4,gobelin1N4,gobelin2N4,gobelin3N4,gobelin4N4,gobelin5N4,gobelin6N4))
+mobsN5.extend((loup1N5,loup2N5,loup3N5,loup4N5,squelette1N5,squelette2N5,squelette3N5,squelette4N5,centaure1N5,centaure2N5,cavalier1N5,cavalier2N5,cavalier3N5,mort_vivant1N5,mort_vivant2N5,araignee1N5,araignee2N5,araignee3N5,araignee4N5,orc1N5,orc2N5,orc3N5,persephon))
 
-mobslist.extend((loup1N1,loup2N1,loup3N1,loup4N1,loup5N1,loup6N1,loup7N1,loup8N1,loup9N1,loup10N1,loup1N2,loup2N2,loup1N4,loup2N4,loup3N4,loup1N5,loup2N5,loup3N5,loup4N5,squelette1N2,squelette1N2,squelette3N2,squelette4N2,squelette5N2,squelette6N2,squelette7N2,squelette1N3,squelette2N3,squelette3N3,squelette4N3,squelette5N3,squelette6N3,squelette7N3,squelette1N4,squelette2N4,squelette3N4,squelette4N4,squelette5N4,squelette6N4,squelette7N4,squelette8N4,squelette1N5,squelette2N5,squelette3N5,squelette4N5,centaure1N2,centaure2N2,centaure1N3,centaure2N3,centaure3N3,centaure4N3,centaure1N4,centaure2N4,centaure3N4,centaure1N5,centaure2N5,cavalier1N2,cavalier1N4,cavalier2N4,cavalier3N4,cavalier4N4,cavalier5N4,cavalier6N4,cavalier1N5,cavalier2N5,cavalier3N5,mort_vivant1N2,mort_vivant2N2,mort_vivant3N2,mort_vivant4N2,mort_vivant5N2,mort_vivant6N2,mort_vivant7N2,mort_vivant8N2,mort_vivant9N2,mort_vivant10N2,mort_vivant1N3,mort_vivant1N4,mort_vivant2N4,mort_vivant1N5,mort_vivant2N5,araignee1N2,araignee2N2,araignee3N2,araignee4N2,araignee5N2,araignee6N2,araignee7N2,araignee8N2,araignee9N2,araignee10N2,araignee1N3,araignee2N3,araignee1N4,araignee2N4,araignee1N5,araignee2N5,araignee3N5,araignee4N5,orc1N1,orc2N1,orc3N1,orc4N1,orc4N1,orc5N1,orc6N1,orc1N3,orc2N3,orc3N3,orc4N3,orc5N3,orc6N3,orc7N3,orc8N3,orc1N4,orc2N4,orc1N4,orc2N5,orc3N5,gobelin1N2,gobelin2N2,gobelin3N2,gobelin4N2,gobelin5N2,gobelin6N2,gobelin1N3,gobelin2N3,gobelin3N3,gobelin4N3,gobelin5N3,gobelin6N3,gobelin7N3,gobelin8N3,gobelin9N3,gobelin10N3,gobelin1N4,gobelin2N4,gobelin3N4,gobelin4N4,gobelin5N4,gobelin6N4,persephon))
 
-def mobsupdate():
-    for mobs in mobslist:
+def mobsN1update():
+    for mobs in mobsN1:
         mobs.update()
+def mobsN2update():
+    for mobs in mobsN2:
+        mobs.update()
+def mobsN3update():
+    for mobs in mobsN3:
+        mobs.update()
+def mobsN4update():
+    for mobs in mobsN4:
+        mobs.update()
+def mobsN5update():
+    for mobs in mobsN5:
+        mobs.update()
+
+def mobsniveau():
+        if Niveau == 1:
+                mobslist = mobsN1
+        if Niveau == 2:
+                mobslist = mobsN2
+        if Niveau == 3:
+                mobslist = mobsN3
+        if Niveau == 4:
+                mobslist = mobsN4
+        if Niveau == 5:
+                mobslist = mobsN5
 
 
 def update():
-    mobsupdate()
+    actions.carte.generer()
+    if Niveau == 1:
+            mobsN1update()
+    if Niveau == 2:
+            mobsN2update()
+    if Niveau == 3:
+            mobsN3update()
+    if Niveau == 4:
+            mobsN4update()
+    if Niveau == 5:
+        mobsN5update()
     spellsupdate()
     player.update()
 
@@ -1286,15 +1362,10 @@ font2 = pygame.font.SysFont("Chiller", 70)
 font3 = pygame.font.SysFont("Chiller",48)
 
 #rendre tous les sorts disponibles
-berserk = 1
 affichage_be="disponible"
-corps_d_acier=1
 affichage_ca="disponible"
-arme_d_acier = 1
 affichage_aa="disponible"
-invisibilite = 1
 affichage_in="disponible"
-soin = 1
 affichage_soin="disponible"
 
 def hud():

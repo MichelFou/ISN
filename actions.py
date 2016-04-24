@@ -12,6 +12,7 @@ def tour_plus_un ():
     nombre_de_tour_score = nombre_de_tour_score + 1
 
 
+
 #affichage de la map
 class Niveau:
     #initialisation
@@ -90,3 +91,26 @@ class Niveau:
                 ligne_affichee = ligne_affichee+1
             #on incrémente la ligne testée pour évaluer si elle est dans le champ de vision
             num_ligne = num_ligne+1
+
+
+carte1 = Niveau("Niveaux/N1.txt")
+carte2 = Niveau("Niveaux/N2.txt")
+carte3 = Niveau("Niveaux/N3.txt")
+carte4 = Niveau("Niveaux/N4.txt")
+carte5 = Niveau("Niveaux/N5.txt")
+
+with open("carte.txt", "r")as fichier:
+    for ligne in fichier:
+        for sprite in ligne:
+            if sprite =="1":
+                carte=carte1
+            if sprite =="2":
+                carte=carte2
+            if sprite == "3":
+                carte=carte3
+            if sprite == "4":
+                carte=carte4
+            if sprite=="5":
+                carte = carte5
+
+
