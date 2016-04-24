@@ -53,7 +53,7 @@ class Niveau:
         #on lit chaque ligne de self structure
         for ligne in self.structure:
             #si la ligne est située à 6 sur l'axe des y du heros on continue ce qui definit un champs de vision
-            if num_ligne>y_heros -6 and num_ligne<y_heros+6:
+            if num_ligne>player.y -6 and num_ligne<player.y+6:
                 case_affichee = 0
                 num_sprite = 0
                 #on lit dans les sprites
@@ -62,7 +62,7 @@ class Niveau:
                     x=(case_affichee* taille_sprite)+280
                     y=(ligne_affichee* taille_sprite)+10
                     #si le sprite est situé a 6 sur l'axe des x on continue cela définit completemnt le champ de vision
-                    if num_sprite>x_heros -6 and num_sprite<x_heros+6:
+                    if num_sprite>player.x -6 and num_sprite<player.x+6:
                         #on teste pour chaque sprite quelle lettre pour savoir quel ennemi ou texture afficher
                         if sprite =='m':
                             fenetre.blit(milieu,(x,y))

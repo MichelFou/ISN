@@ -43,28 +43,27 @@ class Player:
                 self.hasarmure = None
                 self.sort = None
                 self.armure = None
-                self.up = pygame.image.load("Images/Hero-up.png")
-                self.down = pygame.image.load("Images/Hero-down.png")
-                self.left = pygame.image.load("Images/Hero-left.png")
-                self.right = pygame.image.load("Images/Hero-right.png")
-                self.direction = self.up
-                self.image = self.direction
+                self.up = pygame.image.load("Images/Hero-up.png").convert_alpha()
+                self.down = pygame.image.load("Images/Hero-down.png").convert_alpha()
+                self.left = pygame.image.load("Images/Hero-left.png").convert_alpha()
+                self.right = pygame.image.load("Images/Hero-right.png").convert_alpha()
+                self.image = self.up
                 self.nextlevel = False
                 
         def moveup(self):
-                self.direction = self.up
+                self.image = self.up
                 self.y-=1
 
         def movedown(self):
-                self.direction = self.down
+                self.image = self.down
                 self.y+=1
 
         def moveleft(self):
-                self.direction = self.left
+                self.image = self.left
                 self.x-=1
         
         def moveright(self):
-                self.direction = self.right
+                self.image = self.right
                 self.x+=1
 
         def levelup(self):
@@ -81,7 +80,6 @@ class Player:
                 if self.pv <= 0:
                         self.estmort = True
                         gameover = True
-                fenetre.blit(self.image,(self.x,self.y))
                 if self.xp == self.nextlevelxp:
                         self.xp = 0
                         self.levelup = True
@@ -90,11 +88,6 @@ class Player:
                         self.nextlevel = True
                 if self.nextlevel:
                         self.levelup()
-                print self.attaque
-                print self.defense
-                print self.discretion
-                print self.degat
-                print self.magie
         
         def equiper_armure(self,armure):
                 if self.hasarmure:
@@ -123,11 +116,11 @@ class Player:
                 old_arme_name = arme_name
                 self.hasarme = True
 
-        def blesse(self,mob_name):
-                if randint(1,30)<mob_name.attaque:
+        def blesse(self,name):
+                if randint(1,30)<name.attaque:
                         if randint(1,30)>self.vitesse:
                                 print ("Coup !")
-                                valeur = randint(1,mob_name.degat)-randint(1,self.defense)
+                                valeur = randint(1,name.degat)-randint(1,self.defense)
                                 if valeur > 0:
                                         self.pv -= valeur
                                 else:
@@ -138,8 +131,8 @@ class Player:
                 else:
                         echec = True
                         print "Echec !"
-        def attack(self,mob_name):
-                mob_name.blesse()
+        def attack(self,name):
+                name.blesse(self)
 
 class Armure:
         def __init__(self):
@@ -288,7 +281,6 @@ class Mobs:
                                                                 self.moveup()
                                                         if self.y < player.y:
                                                                 self.movedown()
-                        fenetre.blit(self.image,(self.x,self.y))
                         
                 def moveleft(self):
                         if actions.carte.structure[self.y][self.x-1]=='h':
@@ -302,10 +294,10 @@ class Mobs:
                 def movedown(self):
                         if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
-                def blesse(self):
-                        if randint(1,30)<player.attaque:
+                def blesse(self,name):
+                        if randint(1,30)<name.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player.degat)-randint(1,self.defense)
+                                        valeur = randint(1,name.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -317,8 +309,8 @@ class Mobs:
                         else:
                                 echec = True
                                 print "Echec !"
-                def attack(self):
-                        player.blesse(self)
+                def attack(self,name):
+                        name.blesse(self)
                         
 
         class Orc:
@@ -376,7 +368,6 @@ class Mobs:
                                                                 self.moveup()
                                                         if self.y < player.y:
                                                                 self.movedown()
-                        fenetre.blit(self.image,(self.x,self.y))
                         
                 def moveleft(self):
                         if actions.carte.structure[self.y][self.x-1]=='h':
@@ -390,10 +381,10 @@ class Mobs:
                 def movedown(self):
                         if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
-                def blesse(self):
-                        if randint(1,30)<player.attaque:
+                def blesse(self,name):
+                        if randint(1,30)<name.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player.degat)-randint(1,self.defense)
+                                        valeur = randint(1,name.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -405,8 +396,8 @@ class Mobs:
                         else:
                                 echec = True
                                 print "Echec !"
-                def attack(self):
-                        player.blesse(self)
+                def attack(self,name):
+                        name.blesse(self)
 
         class Gobelin:
                 def __init__(self,x,y):
@@ -463,7 +454,6 @@ class Mobs:
                                                                 self.moveup()
                                                         if self.y < player.y:
                                                                 self.movedown()
-                        fenetre.blit(self.image,(self.x,self.y))
                 def moveleft(self):
                         if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
@@ -476,13 +466,13 @@ class Mobs:
                 def movedown(self):
                         if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
-                def attack(self):
-                        player.blesse(self)
+                def attack(self,name):
+                        name.blesse(self)
                         
-                def blesse(self,player):
-                        if randint(1,30)<player.attaque:
+                def blesse(self,name):
+                        if randint(1,30)<name.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player.degat)-randint(1,self.defense)
+                                        valeur = randint(1,name.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -549,12 +539,11 @@ class Mobs:
                                                                 self.moveup()
                                                         if self.y < player.y:
                                                                 self.movedown()
-                        fenetre.blit(self.image,(self.x,self.y))
                         
-                def blesse(self,player):
-                        if randint(1,30)<player.attaque:
+                def blesse(self,name):
+                        if randint(1,30)<name.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player.degat)-randint(1,self.defense)
+                                        valeur = randint(1,name.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -566,8 +555,8 @@ class Mobs:
                         else:
                                 echec = True
                                 print "Echec !"
-                def attack(self):
-                        player.blesse(self)
+                def attack(self,name):
+                        name.blesse(self)
                 def moveleft(self):
                         if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
@@ -635,12 +624,11 @@ class Mobs:
                                                                 self.moveup()
                                                         if self.y < player.y:
                                                                 self.movedown()
-                        fenetre.blit(self.image,(self.x,self.y))
                         
-                def blesse(self,player):
-                        if randint(1,30)<player.attaque:
+                def blesse(self,name):
+                        if randint(1,30)<name.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player.degat)-randint(1,self.defense)
+                                        valeur = randint(1,name.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -652,8 +640,8 @@ class Mobs:
                         else:
                                 echec = True
                                 print "Echec !"
-                def attack(self):
-                        player.blesse(self)
+                def attack(self,name):
+                        name.blesse(self)
                 def moveleft(self):
                         if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
@@ -721,12 +709,11 @@ class Mobs:
                                                                 self.moveup()
                                                         if self.y < player.y:
                                                                 self.movedown()
-                        fenetre.blit(self.image,(self.x,self.y))
                         
-                def blesse(self,player):
-                        if randint(1,30)<player.attaque:
+                def blesse(self,name):
+                        if randint(1,30)<name.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player.degat)-randint(1,self.defense)
+                                        valeur = randint(1,name.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -738,8 +725,8 @@ class Mobs:
                         else:
                                 echec = True
                                 print "Echec !"
-                def attack(self):
-                        player.blesse(self)
+                def attack(self,name):
+                        name.blesse(self)
                 def moveleft(self):
                         if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
@@ -807,12 +794,11 @@ class Mobs:
                                                                 self.moveup()
                                                         if self.y < player.y:
                                                                 self.movedown()
-                        fenetre.blit(self.image,(self.x,self.y))
                         
-                def blesse(self,player):
-                        if randint(1,30)<player.attaque:
+                def blesse(self,name):
+                        if randint(1,30)<name.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player.degat)-randint(1,self.defense)
+                                        valeur = randint(1,name.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -824,8 +810,8 @@ class Mobs:
                         else:
                                 echec = True
                                 print "Echec !"
-                def attack(self):
-                        player.blesse(self)
+                def attack(self,name):
+                        name.blesse(self)
                 def moveleft(self):
                         if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
@@ -893,7 +879,6 @@ class Mobs:
                                                                 self.moveup()
                                                         if self.y < player.y:
                                                                 self.movedown()
-                        fenetre.blit(self.image,(self.x,self.y))
                 def moveleft(self):
                         if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
@@ -907,13 +892,13 @@ class Mobs:
                         if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
                                 
-                def attack(self,player):
-                        player.blesse(self)
+                def attack(self,name):
+                        name.blesse(self)
         
-                def blesse(self,player):
-                        if randint(1,30)<player.attaque:
+                def blesse(self,name):
+                        if randint(1,30)<name.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player.degat)-randint(1,self.defense)
+                                        valeur = randint(1,name.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -979,7 +964,6 @@ class Mobs:
                                                                 self.moveup()
                                                         if self.y < player.y:
                                                                 self.movedown()
-                        fenetre.blit(self.image,(self.x,self.y))
                 def moveleft(self):
                         if actions.carte.structure[self.y][self.x-1]=='h':
                                 self.x -= 1
@@ -993,13 +977,13 @@ class Mobs:
                         if actions.carte.structure[self.y+1][self.x]=='h':
                                 self.x += 1
                                 
-                def attack(self,player):
-                        player.blesse(self)
+                def attack(self,name):
+                        name.blesse(self)
         
-                def blesse(self,player):
-                        if randint(1,30)<player.attaque:
+                def blesse(self,name):
+                        if randint(1,30)<name.attaque:
                                 if randint(1,30)>self.vitesse:
-                                        valeur = randint(1,player.degat)-randint(1,self.defense)
+                                        valeur = randint(1,name.degat)-randint(1,self.defense)
                                         print "Coup !"
                                         if valeur > 0:
                                                 self.pv -= valeur
@@ -1024,8 +1008,8 @@ class Spell:
                 self.tempsecoule = 0
         class Berserk:
                 def __init__(self):
-                        self.duree = 7 + player.magie
-                        self.recharge = 20 - player.magie
+                        self.duree = 7 + int(0.2*player.magie)
+                        self.recharge = 20 - int(0.5*player.magie)
                         self.actif = 0
                         self.dispo = 1
                         self.tempsecoule = 0
@@ -1051,8 +1035,8 @@ class Spell:
                                 self.actif = 1
         class Corps_Dacier:
                 def __init__(self):
-                        self.duree = 7 + player.magie
-                        self.recharge = 30 - player.magie
+                        self.duree = 7 + int(0.2*player.magie)
+                        self.recharge = 20 - int(0.5*player.magie)
                         self.actif = 0
                         self.dispo = 1
                         self.tempsecoule = 0
@@ -1075,8 +1059,8 @@ class Spell:
                                 
         class Arme_Enflammee:
                 def __init__(self):
-                        self.duree = 7 + player.magie
-                        self.recharge = 30 - player.magie
+                        self.duree = 7 + int(0.2*player.magie)
+                        self.recharge = 20 - int(0.5*player.magie)
                         self.actif = 0
                         self.dispo = 1
                         self.tempsecoule = 0
@@ -1101,8 +1085,8 @@ class Spell:
                                 
         class Invisibilite:
                 def __init__(self):
-                        self.duree = 10 + player.magie
-                        self.recharge = 10 - player.magie
+                        self.duree = 7 + int(0.2*player.magie)
+                        self.recharge = 20 - int(0.5*player.magie)
                         self.actif = 0
                         self.dispo = 1
                         self.tempsecoule = 0
@@ -1345,7 +1329,7 @@ def mobsniveau():
 
 
 def update():
-    actions.carte.generer()
+    actions.carte.afficher(fenetre)
     if Niveau == 1:
             mobsN1update()
     if Niveau == 2:
@@ -1358,6 +1342,7 @@ def update():
         mobsN5update()
     spellsupdate()
     player.update()
+    pygame.display.flip()
 
 
 

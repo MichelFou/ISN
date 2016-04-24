@@ -14,7 +14,6 @@ pygame.display.set_caption("Trapped!")
 
 while 1:
     #mise en place de la fenetre
-    fenetre = pygame.display.set_mode((1083,812))
     fond = pygame.image.load("Images/FOND.jpg").convert()
     fenetre.blit(fond,(0,0))
     pygame.display.flip()
@@ -213,7 +212,13 @@ while 1:
                         menu = 0
                         #entree dans la nouvelle boucle
                         suite = 1
-    update()
+
+    player.attaque = attaque
+    player.defense = defense
+    player.vitesse = vitesse
+    player.degat = degat
+    player.discretion = discretion
+    player.magie = magie
     #boucle du niveau 1
     #musique du niveau
     pygame.mixer.music.load("Musiques/Musique n1.wav")
@@ -231,8 +236,10 @@ while 1:
         carte=carte1
         carte.generer()
         carte.afficher(fenetre)
+        for mobs in mobsN1:
+            fenetre.blit(mobs.image,(mobs.x,mobs.y))
+        fenetre.blit(player.image,(player.x,player.y))
         pygame.display.flip()
-
         for event in pygame.event.get():
             if event.type == QUIT:
                         pygame.quit()
