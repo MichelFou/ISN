@@ -212,7 +212,7 @@ while 1:
                         menu = 0
                         #entree dans la nouvelle boucle
                         suite = 1
-
+    
     player.attaque = attaque
     player.defense = defense
     player.vitesse = vitesse
@@ -227,52 +227,70 @@ while 1:
     adjacent_droite = None
     adjacent_haut = None
     adjacent_bas = None
+    player.x = 30
+    player.y = 47
     while suite==1:
         hud()
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("1")
         def_niveau.close
-        carte=carte1
-        carte.generer()
-        carte.afficher(fenetre)
+        carte1.generer()
+        carte1.afficher(fenetre)
         for mobs in mobsN1:
-            fenetre.blit(mobs.image,(mobs.x,mobs.y))
-        fenetre.blit(player.image,(player.x,player.y))
+            if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
+                fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
+        fenetre.blit(player.image,(640,360))
         pygame.display.flip()
         for event in pygame.event.get():
+            jouer = 0
             if event.type == QUIT:
                         pygame.quit()
                         exit()
             if event.type == KEYDOWN:
                 if event.key==K_LEFT:
-                    if adjacent_gauche !=None:
-                        player.attack(adjacent_gauche)
-                    elif carte.structure[player.y][player.x-1]=='h':
-                        player.moveleft()
-                        update()
-                    
+                    for mobs in mobsN1:
+                        if jouer == 0:
+                            if mobs.x==player.x-1 and mobs.y==player.y:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte1.structure[player.y][player.x-1]=='h':
+                            player.moveleft()
+                            update()
                 if event.key==K_UP:
-                    if adjacent_haut != None:
-                        player.attack(adjacent_haut)
-                    elif carte.structure[player.y-1][player.x]=='h':
-                        player.moveup()
-                        update()
+                    for mobs in mobsN1:
+                        if jouer == 0:
+                            if mobs.x==player.x and mobs.y==player.y-1:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte1.structure[player.y-1][player.x]=='h':
+                            player.moveup()
+                            update()
 
                       
                 if event.key==K_DOWN:
-                    if adjacent_bas != None:
-                        player.attack(adjacent_bas)
-                    elif carte.structure[player.y+1][player.x]=='h':
-                        player.movedown()
-                        update()
+                    for mobs in mobsN1:
+                        if jouer == 0:
+                            if mobs.x==player.x and mobs.y==player.y+1:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte1.structure[player.y+1][player.x]=='h':
+                            player.movedown()
+                            update()
                       
                 if event.key==K_RIGHT:
-                    if adjacent_droite != None:
-                        player.attack(adjacent_droite)
-                    elif carte.structure[player.y][player.x+1]=='h':
-                        player.moveright()
-                        update()
+                    for mobs in mobsN1:
+                        if jouer == 0:
+                            if mobs.x==player.x+1 and mobs.y==player.y:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte1.structure[player.y][player.x+1]=='h':
+                            player.moveright()
+                            update()
                         
                 if event.key==K_SPACE:
                     update()
@@ -293,7 +311,7 @@ while 1:
                 if event.key ==K_5:
                     soin.lancer()
                       
-        if gameover == 1:
+        if gameover == True:
             suite = 7                
 
         #fin du niveau 1 si le joueur atteind l'arrivee
@@ -307,51 +325,70 @@ while 1:
     adjacent_droite = None
     adjacent_haut = None
     adjacent_bas = None
+    player.x = 30
+    player.y = 47
     while suite ==2:
         hud()
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("2")
         def_niveau.close
-        carte=carte2
-        carte.generer()
-        carte.afficher(fenetre)
+        carte2.generer()
+        carte2.afficher(fenetre)
+        for mobs in mobsN2:
+            if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
+                fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
+        fenetre.blit(player.image,(640,360))
         pygame.display.flip()
-
-
         for event in pygame.event.get():
+            jouer = 0
             if event.type == QUIT:
                         pygame.quit()
                         exit()
             if event.type == KEYDOWN:
                 if event.key==K_LEFT:
-                    if adjacent_gauche !=None:
-                        player.attack(adjacent_gauche)
-                    elif carte.structure[player.y][player.x-1]=='h':
-                        player.moveleft()
-                        update()
-                    
+                    for mobs in mobsN2:
+                        if jouer == 0:
+                            if mobs.x==player.x-1 and mobs.y==player.y:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte2.structure[player.y][player.x-1]=='h':
+                            player.moveleft()
+                            update()
                 if event.key==K_UP:
-                    if adjacent_haut != None:
-                        player.attack(adjacent_haut)
-                    elif carte.structure[player.y-1][player.x]=='h':
-                        player.moveup()
-                        update()
+                    for mobs in mobsN2:
+                        if jouer == 0:
+                            if mobs.x==player.x and mobs.y==player.y-1:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte2.structure[player.y-1][player.x]=='h':
+                            player.moveup()
+                            update()
 
                       
                 if event.key==K_DOWN:
-                    if adjacent_bas != None:
-                        player.attack(adjacent_bas)
-                    elif carte.structure[player.y+1][player.x]=='h':
-                        player.movedown()
-                        update()
+                    for mobs in mobsN2:
+                        if jouer == 0:
+                            if mobs.x==player.x and mobs.y==player.y+1:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte2.structure[player.y+1][player.x]=='h':
+                            player.movedown()
+                            update()
                       
                 if event.key==K_RIGHT:
-                    if adjacent_droite != None:
-                        player.attack(adjacent_droite)
-                    elif carte.structure[player.y][player.x+1]=='h':
-                        player.moveright()
-                        update()
+                    for mobs in mobsN2:
+                        if jouer == 0:
+                            if mobs.x==player.x+1 and mobs.y==player.y:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte2.structure[player.y][player.x+1]=='h':
+                            player.moveright()
+                            update()
                     
                 if event.key==K_SPACE:
                     update()
@@ -371,7 +408,7 @@ while 1:
                 if event.key ==K_5:
                     soin.lancer()
                     
-        if gameover == 1:
+        if gameover:
             suite = 7
             
         #fin du niveau 2 si le joueur atteind l'arrivee
@@ -385,71 +422,90 @@ while 1:
     adjacent_droite = None
     adjacent_haut = None
     adjacent_bas = None
+    player.x = 30
+    player.y = 47
     while suite == 3:
         hud()
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("3")
         def_niveau.close
-        carte=carte3
-        carte.generer()
-        carte.afficher(fenetre)
+        carte3.generer()
+        carte3.afficher(fenetre)
+        for mobs in mobsN1:
+            if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
+                fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
+        fenetre.blit(player.image,(640,360))
         pygame.display.flip()
-
-
         for event in pygame.event.get():
+            jouer = 0
             if event.type == QUIT:
                         pygame.quit()
                         exit()
             if event.type == KEYDOWN:
                 if event.key==K_LEFT:
-                    if adjacent_gauche !=None:
-                        player.attack(adjacent_gauche)
-                    elif carte.structure[player.y][player.x-1]=='h':
-                        player.moveleft()
-                        update()
-                    
+                    for mobs in mobsN3:
+                        if jouer == 0:
+                            if mobs.x==player.x-1 and mobs.y==player.y:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte3.structure[player.y][player.x-1]=='h':
+                            player.moveleft()
+                            update()
                 if event.key==K_UP:
-                    if adjacent_haut != None:
-                        player.attack(adjacent_haut)
-                    elif carte.structure[player.y-1][player.x]=='h':
-                        player.moveup()
-                        update()
+                    for mobs in mobsN3:
+                        if jouer == 0:
+                            if mobs.x==player.x and mobs.y==player.y-1:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte3.structure[player.y-1][player.x]=='h':
+                            player.moveup()
+                            update()
 
                       
                 if event.key==K_DOWN:
-                    if adjacent_bas != None:
-                        player.attack(adjacent_bas)
-                    elif carte.structure[player.y+1][player.x]=='h':
-                        player.movedown()
-                        update()
+                    for mobs in mobsN3:
+                        if jouer == 0:
+                            if mobs.x==player.x and mobs.y==player.y+1:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte3.structure[player.y+1][player.x]=='h':
+                            player.movedown()
+                            update()
                       
                 if event.key==K_RIGHT:
-                    if adjacent_droite != None:
-                        player.attack(adjacent_droite)
-                    elif carte.structure[player.y][player.x+1]=='h':
-                        player.moveright()
-                        update()
+                    for mobs in mobsN3:
+                        if jouer == 0:
+                            if mobs.x==player.x+1 and mobs.y==player.y:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte3.structure[player.y][player.x+1]=='h':
+                            player.moveright()
+                            update()
                     
-                if event.key==K_SPACE:
+            if event.key==K_SPACE:
                     update()
 
-                if event.key ==K_1:
+            if event.key ==K_1:
                     berserk.lancer()
                     
-                if event.key == K_2:
+            if event.key == K_2:
                     corps_dacier.lancer()
                     
-                if event.key == K_3:
+            if event.key == K_3:
                     arme_enflammee.lancer()
                     
-                if event.key== K_4:
+            if event.key== K_4:
                     invisibilite.lancer()
                     
-                if event.key ==K_5:
+            if event.key ==K_5:
                     soin.lancer()
                     
-        if gameover == 1:
+        if gameover:
             suite = 7                
 
         #fin du niveau 2 si le joueur atteind l'arrivee
@@ -463,52 +519,71 @@ while 1:
     adjacent_droite = None
     adjacent_haut = None
     adjacent_bas = None
+    player.x = 30
+    player.y = 47
     while suite==4:
         hud()
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("4")
         def_niveau.close
-        carte=carte4
-        carte.generer()
-        carte.afficher(fenetre)
+        carte4.generer()
+        carte4.afficher(fenetre)
+        for mobs in mobsN1:
+            if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
+                fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
+        fenetre.blit(player.image,(640,360))
         pygame.display.flip()
-
-
         for event in pygame.event.get():
+            jouer = 0
             if event.type == QUIT:
                         pygame.quit()
                         exit()
             if event.type == KEYDOWN:
                 if event.key==K_LEFT:
-                    if adjacent_gauche !=None:
-                        player.attack(adjacent_gauche)
-                    elif carte.structure[player.y][player.x-1]=='h':
-                        player.moveleft()
-                        update()
-                    
+                    for mobs in mobsN4:
+                        if jouer == 0:
+                            if mobs.x==player.x-1 and mobs.y==player.y:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte4.structure[player.y][player.x-1]=='h':
+                            player.moveleft()
+                            update()
                 if event.key==K_UP:
-                    if adjacent_haut != None:
-                        player.attack(adjacent_haut)
-                    elif carte.structure[player.y-1][player.x]=='h':
-                        player.moveup()
-                        update()
+                    for mobs in mobsN4:
+                        if jouer == 0:
+                            if mobs.x==player.x and mobs.y==player.y-1:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte4.structure[player.y-1][player.x]=='h':
+                            player.moveup()
+                            update()
 
                       
                 if event.key==K_DOWN:
-                    if adjacent_bas != None:
-                        player.attack(adjacent_bas)
-                    elif carte.structure[player.y+1][player.x]=='h':
-                        player.movedown()
-                        update()
+                    for mobs in mobsN4:
+                        if jouer == 0:
+                            if mobs.x==player.x and mobs.y==player.y+1:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte4.structure[player.y+1][player.x]=='h':
+                            player.movedown()
+                            update()
                       
                 if event.key==K_RIGHT:
-                    if adjacent_droite != None:
-                        player.attack(adjacent_droite)
-                    elif carte.structure[player.y][player.x+1]=='h':
-                        player.moveright()
-                        update()
-                    
+                    for mobs in mobsN4:
+                        if jouer == 0:
+                            if mobs.x==player.x+1 and mobs.y==player.y:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte4.structure[player.y][player.x+1]=='h':
+                            player.moveright()
+                            update()
+                        
                 if event.key==K_SPACE:
                     update()
 
@@ -527,7 +602,7 @@ while 1:
                 if event.key ==K_5:
                     soin.lancer()
                     
-        if gameover == 1:
+        if gameover:
             suite = 7
 
         #fin du niveau 2 si le joueur atteind l'arrivee
@@ -541,52 +616,71 @@ while 1:
     adjacent_droite = None
     adjacent_haut = None
     adjacent_bas = None
+    player.x = 30
+    player.y = 47
     while suite == 5:
         hud()
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("5")
         def_niveau.close
-        carte=carte5
-        carte.generer()
-        carte.afficher(fenetre)
+        carte5.generer()
+        carte5.afficher(fenetre)
+        for mobs in mobsN1:
+            if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
+                fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
+        fenetre.blit(player.image,(640,360))
         pygame.display.flip()
-
-
         for event in pygame.event.get():
+            jouer = 0
             if event.type == QUIT:
                         pygame.quit()
                         exit()
             if event.type == KEYDOWN:
                 if event.key==K_LEFT:
-                    if adjacent_gauche !=None:
-                        player.attack(adjacent_gauche)
-                    elif carte.structure[player.y][player.x-1]=='h':
-                        player.moveleft()
-                        update()
-                    
+                    for mobs in mobsN5:
+                        if jouer == 0:
+                            if mobs.x==player.x-1 and mobs.y==player.y:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte5.structure[player.y][player.x-1]=='h':
+                            player.moveleft()
+                            update()
                 if event.key==K_UP:
-                    if adjacent_haut != None:
-                        player.attack(adjacent_haut)
-                    elif carte.structure[player.y-1][player.x]=='h':
-                        player.moveup()
-                        update()
+                    for mobs in mobsN5:
+                        if jouer == 0:
+                            if mobs.x==player.x and mobs.y==player.y-1:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte5.structure[player.y-1][player.x]=='h':
+                            player.moveup()
+                            update()
 
                       
                 if event.key==K_DOWN:
-                    if adjacent_bas != None:
-                        player.attack(adjacent_bas)
-                    elif carte.structure[player.y+1][player.x]=='h':
-                        player.movedown()
-                        update()
+                    for mobs in mobsN5:
+                        if jouer == 0:
+                            if mobs.x==player.x and mobs.y==player.y+1:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte5.structure[player.y+1][player.x]=='h':
+                            player.movedown()
+                            update()
                       
                 if event.key==K_RIGHT:
-                    if adjacent_droite != None:
-                        player.attack(adjacent_droite)
-                    elif carte.structure[player.y][player.x+1]=='h':
-                        player.moveright()
-                        update()
-                    
+                    for mobs in mobsN5:
+                        if jouer == 0:
+                            if mobs.x==player.x+1 and mobs.y==player.y:
+                                player.attack(mobs)
+                                jouer = 1
+                    if jouer !=1:
+                        if carte5.structure[player.y][player.x+1]=='h':
+                            player.moveright()
+                            update()
+                        
                 if event.key==K_SPACE:
                     update()
 
@@ -605,7 +699,7 @@ while 1:
                 if event.key ==K_5:
                     soin.lancer()
                     
-        if gameover == 1:
+        if gameover:
             suite = 7                
 
         #fin du niveau 2 si le joueur atteind l'arrivee

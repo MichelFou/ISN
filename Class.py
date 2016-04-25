@@ -8,6 +8,10 @@ import actions
 
 fenetre = pygame.display.set_mode((1083,812))
 
+a = pygame.image.load("Images/Hero-up.png")
+b = pygame.image.load("Images/Hero-down.png")
+c = pygame.image.load("Images/Hero-left.png")
+d = pygame.image.load("Images/Hero-right.png")
 Niveau = 0
 with open("carte.txt", "r")as fichier:
     for ligne in fichier:
@@ -38,32 +42,30 @@ class Player:
                 self.discretion = 1
                 self.x = 30
                 self.y = 47
+                self.xreel = self.x*72 +280
+                self.yreel = self.y*72 +10
                 self.estmort = False
                 self.hasarme = False
                 self.hasarmure = None
                 self.sort = None
                 self.armure = None
-                self.up = pygame.image.load("Images/Hero-up.png").convert_alpha()
-                self.down = pygame.image.load("Images/Hero-down.png").convert_alpha()
-                self.left = pygame.image.load("Images/Hero-left.png").convert_alpha()
-                self.right = pygame.image.load("Images/Hero-right.png").convert_alpha()
-                self.image = self.up
                 self.nextlevel = False
+                self.image = a
                 
         def moveup(self):
-                self.image = self.up
+                self.image = a
                 self.y-=1
 
         def movedown(self):
-                self.image = self.down
+                self.image = b
                 self.y+=1
 
         def moveleft(self):
-                self.image = self.left
+                self.image = c
                 self.x-=1
         
         def moveright(self):
-                self.image = self.right
+                self.image = d
                 self.x+=1
 
         def levelup(self):
@@ -131,6 +133,8 @@ class Player:
                 else:
                         echec = True
                         print "Echec !"
+                if self.pv <= 0:
+                    gameover = True
         def attack(self,name):
                 name.blesse(self)
 
@@ -232,6 +236,7 @@ class Mobs:
                         self.y = y
                         self.image = pygame.image.load("Images/wolf.png").convert_alpha()
                         self.pv = 20
+                        self.image.set_colorkey((255,255,255))
                         self.vitesse = 17
                         self.attaque = 10
                         self.degat = 5
@@ -1126,8 +1131,7 @@ class Spell:
                         
                                 
                                 
-                        
-player = Player()
+player=Player()                       
 spell = Spell()
 spellslist = []
 berserk = spell.Berserk()
@@ -1329,7 +1333,19 @@ def mobsniveau():
 
 
 def update():
-    actions.carte.afficher(fenetre)
+    with open("carte.txt", "r")as fichier:
+        for ligne in fichier:
+            for sprite in ligne:
+                if sprite =="1":
+                    actions.carte1.afficher(fenetre)
+                if sprite =="2":
+                    actions.carte2.afficher(fenetre)
+                if sprite == "3":
+                    actions.carte3.afficher(fenetre)
+                if sprite == "4":
+                    actions.carte4.afficher(fenetre)
+                if sprite=="5":
+                    actions.carte5.afficher(fenetre)
     if Niveau == 1:
             mobsN1update()
     if Niveau == 2:

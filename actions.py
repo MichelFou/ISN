@@ -46,7 +46,7 @@ class Niveau:
         coin_droite= pygame.image.load("Images/Fence - front-right.png").convert_alpha()
         tree = pygame.image.load("Images/tree.png").convert_alpha()
         herbe = pygame.image.load("Images/grass.png").convert_alpha()
-        #end = pygame.image.load(image_end).convert_alpha()
+        end = pygame.image.load("Images/wolf.png").convert_alpha()
         rien = pygame.image.load("Images/rien.png").convert_alpha()
         ligne_affichee = 0
         num_ligne = 0
@@ -98,19 +98,5 @@ carte2 = Niveau("Niveaux/N2.txt")
 carte3 = Niveau("Niveaux/N3.txt")
 carte4 = Niveau("Niveaux/N4.txt")
 carte5 = Niveau("Niveaux/N5.txt")
-
-with open("carte.txt", "r")as fichier:
-    for ligne in fichier:
-        for sprite in ligne:
-            if sprite =="1":
-                carte=carte1
-            if sprite =="2":
-                carte=carte2
-            if sprite == "3":
-                carte=carte3
-            if sprite == "4":
-                carte=carte4
-            if sprite=="5":
-                carte = carte5
 
 
