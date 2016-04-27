@@ -18,7 +18,6 @@ while 1:
     fenetre.blit(fond,(0,0))
     pygame.display.flip()
     menu = 1
-    gameover=0
     choix = 4
     pygame.mixer.music.load("Musiques/Musique menu.wav")
     pygame.mixer.music.play(-1)
@@ -33,7 +32,7 @@ while 1:
             fenetre.blit(rendu_credits,(799,617))
             rendu_quitter = font3.render("Quitter",1,(255,255,255))
             fenetre.blit(rendu_quitter,(799,696))
-            rendu_titre = font3.render("Trapped!",1,(255,0,0))
+            rendu_titre = Trapped.render("Trapped!",1,(0,0,0))
             fenetre.blit(rendu_titre,(100,77))
             pygame.display.flip()
             for event in pygame.event.get():
@@ -55,19 +54,19 @@ while 1:
             while choix==2:
                 #Ã©criture du texte du menu
                 pygame.time.Clock().tick(30)
-                rendu_inst1 = font.render("Le but du jeu est de s'enfuir du chateau ",1,(255,0,0))
+                rendu_inst1 = font.render("Le but du jeu est de s'enfuir du chateau ",1,(51,0,0))
                 fenetre.blit(rendu_inst1,(35,79))
-                rendu_inst2 = font.render("A  l'aide des fleches directionnelles.",1,(255,0,0))
+                rendu_inst2 = font.render("a l'aide des fleches directionnelles.",1,(51,0,0))
                 fenetre.blit(rendu_inst2,(35,139))
-                rendu_inst3 = font.render("La barre espace permet de sauter son",1,(255,0,0))
+                rendu_inst3 = font.render("La barre espace permet de sauter son",1,(51,0,0))
                 fenetre.blit(rendu_inst3,(35,199))
-                rendu_inst4 = font.render("tour",1,(255,0,0))
+                rendu_inst4 = font.render("tour",1,(51,0,0))
                 fenetre.blit(rendu_inst4,(35,259))
-                rendu_inst5 = font.render("Les touches 1, 2, 3, 4 et 5, situees",1,(255,0,0))
+                rendu_inst5 = font.render("Les touches 1, 2, 3, 4 et 5, situees",1,(51,0,0))
                 fenetre.blit(rendu_inst5,(35,319))
-                rendu_inst6 = font.render("en haut du clavier permettent",1,(255,0,0))
+                rendu_inst6 = font.render("en haut du clavier permettent",1,(51,0,0))
                 fenetre.blit(rendu_inst6,(35,379))
-                rendu_inst7 = font.render("de lancer les sorts correspondants.",1,(255,0,0))
+                rendu_inst7 = font.render("de lancer les sorts correspondants.",1,(51,0,0))
                 fenetre.blit(rendu_inst7,(35,439))
                 rendu_instructions_titre = font.render("Instructions",1,(255,255,255))
                 fenetre.blit(rendu_instructions_titre,(870,5))
@@ -87,23 +86,23 @@ while 1:
             #Ecriture du texte du menu
             while choix == 3:
                 pygame.time.Clock().tick(30)
-                rendu_credits1 = font.render("Programmation : GORIA Leonard",1,(255,0,0))
+                rendu_credits1 = font.render("Programmation : GORIA Leonard",1,(51,0,0))
                 fenetre.blit(rendu_credits1,(35,79))
-                rendu_credits2 = font.render("BERKI Rayan",1,(255,0,0))
+                rendu_credits2 = font.render("BERKI Rayan",1,(51,0,0))
                 fenetre.blit(rendu_credits2,(230,125))
-                rendu_credits3 = font.render("Graphismes : TAING Alexandre",1,(255,0,0))
+                rendu_credits3 = font.render("Graphismes : TAING Alexandre",1,(51,0,0))
                 fenetre.blit(rendu_credits3,(35,200))
-                rendu_credits4 = font.render("Musiques : The time to run - Dexter Britain",1,(255,0,0))
+                rendu_credits4 = font.render("Musiques : The time to run - Dexter Britain",1,(51,0,0))
                 fenetre.blit(rendu_credits4,(35,275))
-                rendu_credits5 = font.render("           Aydio - Deltitnu",1,(255,0,0))
+                rendu_credits5 = font.render("           Aydio - Deltitnu",1,(51,0,0))
                 fenetre.blit(rendu_credits5,(35,325))
-                rendu_credits6 = font.render("           Binaerpilot - Cornered",1,(255,0,0))
+                rendu_credits6 = font.render("           Binaerpilot - Cornered",1,(51,0,0))
                 fenetre.blit(rendu_credits6,(35,375))
-                rendu_credits7 = font.render("           Mel P - Les restes de Niourk",1,(255,0,0))
+                rendu_credits7 = font.render("           Mel P - Les restes de Niourk",1,(51,0,0))
                 fenetre.blit(rendu_credits7,(35,425))
-                rendu_credits8 = font.render("           Zero Call - A40",1,(255,0,0))
+                rendu_credits8 = font.render("           Zero Call - A40",1,(51,0,0))
                 fenetre.blit(rendu_credits8,(35,475))
-                rendu_credits9 = font.render("           JT Bruce - Temporal Distortion",1,(255,0,0))
+                rendu_credits9 = font.render("           JT Bruce - Temporal Distortion",1,(51,0,0))
                 fenetre.blit(rendu_credits9,(35,525))
                 rendu_credits_titre = font.render("Credits",1,(255,255,255))
                 fenetre.blit(rendu_credits_titre,(920,5))
@@ -127,22 +126,38 @@ while 1:
             while k>=0:
                 pygame.time.Clock().tick(30)
                 #affichage de l'ecran des competences
-                skill = pygame.image.load("Images/Skill.jpg").convert()
+                skill = pygame.image.load("Images/skill.jpg")
                 fenetre.blit(skill,(0,0))
-                rendu_k = font.render(str(k), 1, (255,0,0))
+                rendu_k = font.render(str(k), 1, (255,255,255))
                 fenetre.blit(rendu_k, (123, 670))
-                rendu_attaque = font.render(str(attaque), 1, (255,0,0))
+                rendu_attaque = font.render(str(attaque), 1, (255,255,255))
                 fenetre.blit(rendu_attaque, (500, 214))
-                rendu_defense = font.render(str(defense), 1, (255,0,0))
+                rendu_defense = font.render(str(defense), 1, (255,255,255))
                 fenetre.blit(rendu_defense, (500, 310))
-                rendu_vitesse = font.render(str(vitesse), 1, (255,0,0))
+                rendu_vitesse = font.render(str(vitesse), 1, (255,255,255))
                 fenetre.blit(rendu_vitesse, (500, 400))
-                rendu_degat = font.render(str(degat), 1, (255,0,0))
+                rendu_degat = font.render(str(degat), 1, (255,255,255))
                 fenetre.blit(rendu_degat, (500, 510))
-                rendu_discretion = font.render(str(discretion), 1, (255,0,0))
+                rendu_discretion = font.render(str(discretion), 1, (255,255,255))
                 fenetre.blit(rendu_discretion, (500, 610))
-                rendu_magie = font.render(str(magie), 1, (255,0,0))
+                rendu_magie = font.render(str(magie), 1, (255,255,255))
                 fenetre.blit(rendu_magie, (500, 710))
+                rendu_attribution = font2.render("Menu d'attribution des competences",1,(255,255,255))
+                fenetre.blit(rendu_attribution,(170,60))
+                rendu_ptrestants = font3.render("Points restants",1,(255,255,255))
+                fenetre.blit(rendu_ptrestants,(30,600))
+                rendu__attaque = font3.render("Attaque",1,(255,255,255))
+                fenetre.blit(rendu__attaque,(620,214))
+                rendu__defense = font3.render("Defense",1,(255,255,255))
+                fenetre.blit(rendu__defense,(620,310))
+                rendu__vitesse = font3.render("Vitesse",1,(255,255,255))
+                fenetre.blit(rendu__vitesse,(620,410))
+                rendu__force = font3.render("Force",1,(255,255,255))
+                fenetre.blit(rendu__force,(620,510))
+                rendu__discretion = font3.render("Discretion",1,(255,255,255))
+                fenetre.blit(rendu__discretion,(620,610))
+                rendu__magie = font3.render("Magie",1,(255,255,255))
+                fenetre.blit(rendu__magie,(620,710))
                 pygame.display.flip()
                 #si clic croix, alors quitter
                 for event in pygame.event.get():
@@ -201,7 +216,7 @@ while 1:
                             k=k+1
                 #affichage de continuer quand il n'y a plus de points atribuables
                 if k==0:
-                    ok = font2.render("Continuer", 1, (255,0,0))
+                    ok = font2.render("Continuer", 1, (255,255,255))
                     fenetre.blit(ok, (800, 670))
                     pygame.display.flip()
                     #si clic sur continuer
@@ -223,10 +238,6 @@ while 1:
     #musique du niveau
     pygame.mixer.music.load("Musiques/Musique n1.wav")
     pygame.mixer.music.play(-1)
-    adjacent_gauche = None
-    adjacent_droite = None
-    adjacent_haut = None
-    adjacent_bas = None
     player.x = 30
     player.y = 47
     while suite==1:
@@ -234,6 +245,7 @@ while 1:
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("1")
+        Niveau = 1
         def_niveau.close
         carte1.generer()
         carte1.afficher(fenetre)
@@ -252,7 +264,9 @@ while 1:
                     for mobs in mobsN1:
                         if jouer == 0:
                             if mobs.x==player.x-1 and mobs.y==player.y:
+                                player.image = c
                                 player.attack(mobs)
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte1.structure[player.y][player.x-1]=='h':
@@ -262,7 +276,9 @@ while 1:
                     for mobs in mobsN1:
                         if jouer == 0:
                             if mobs.x==player.x and mobs.y==player.y-1:
+                                player.image = a
                                 player.attack(mobs)
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte1.structure[player.y-1][player.x]=='h':
@@ -274,7 +290,9 @@ while 1:
                     for mobs in mobsN1:
                         if jouer == 0:
                             if mobs.x==player.x and mobs.y==player.y+1:
+                                player.image = b
                                 player.attack(mobs)
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte1.structure[player.y+1][player.x]=='h':
@@ -285,7 +303,10 @@ while 1:
                     for mobs in mobsN1:
                         if jouer == 0:
                             if mobs.x==player.x+1 and mobs.y==player.y:
+                                player.image = d
                                 player.attack(mobs)
+                                update()
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte1.structure[player.y][player.x+1]=='h':
@@ -310,8 +331,11 @@ while 1:
                     
                 if event.key ==K_5:
                     soin.lancer()
+                    
+                #if event.key==K_O:
+                    #crash
                       
-        if gameover == True:
+        if player.estmort == True:
             suite = 7                
 
         #fin du niveau 1 si le joueur atteind l'arrivee
@@ -321,10 +345,6 @@ while 1:
     #musique du niveau
     pygame.mixer.music.load("Musiques/Musique n2.wav")
     pygame.mixer.music.play(-1)
-    adjacent_gauche = None
-    adjacent_droite = None
-    adjacent_haut = None
-    adjacent_bas = None
     player.x = 30
     player.y = 47
     while suite ==2:
@@ -332,6 +352,7 @@ while 1:
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("2")
+        Niveau = 2
         def_niveau.close
         carte2.generer()
         carte2.afficher(fenetre)
@@ -350,7 +371,10 @@ while 1:
                     for mobs in mobsN2:
                         if jouer == 0:
                             if mobs.x==player.x-1 and mobs.y==player.y:
+                                player.image = c
                                 player.attack(mobs)
+                                update()
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte2.structure[player.y][player.x-1]=='h':
@@ -360,7 +384,10 @@ while 1:
                     for mobs in mobsN2:
                         if jouer == 0:
                             if mobs.x==player.x and mobs.y==player.y-1:
+                                player.image = a
                                 player.attack(mobs)
+                                update()
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte2.structure[player.y-1][player.x]=='h':
@@ -372,7 +399,10 @@ while 1:
                     for mobs in mobsN2:
                         if jouer == 0:
                             if mobs.x==player.x and mobs.y==player.y+1:
+                                player.image = b
                                 player.attack(mobs)
+                                update()
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte2.structure[player.y+1][player.x]=='h':
@@ -383,7 +413,10 @@ while 1:
                     for mobs in mobsN2:
                         if jouer == 0:
                             if mobs.x==player.x+1 and mobs.y==player.y:
+                                player.image = d
                                 player.attack(mobs)
+                                update()
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte2.structure[player.y][player.x+1]=='h':
@@ -408,7 +441,7 @@ while 1:
                 if event.key ==K_5:
                     soin.lancer()
                     
-        if gameover:
+        if player.estmort:
             suite = 7
             
         #fin du niveau 2 si le joueur atteind l'arrivee
@@ -418,10 +451,6 @@ while 1:
     #musique du niveau
     pygame.mixer.music.load("Musiques/Musique n3.wav")
     pygame.mixer.music.play(-1)
-    adjacent_gauche = None
-    adjacent_droite = None
-    adjacent_haut = None
-    adjacent_bas = None
     player.x = 30
     player.y = 47
     while suite == 3:
@@ -429,10 +458,11 @@ while 1:
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("3")
+        Niveau = 3
         def_niveau.close
         carte3.generer()
         carte3.afficher(fenetre)
-        for mobs in mobsN1:
+        for mobs in mobsN3:
             if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                 fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
         fenetre.blit(player.image,(640,360))
@@ -447,7 +477,10 @@ while 1:
                     for mobs in mobsN3:
                         if jouer == 0:
                             if mobs.x==player.x-1 and mobs.y==player.y:
+                                player.image = c
                                 player.attack(mobs)
+                                update()
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte3.structure[player.y][player.x-1]=='h':
@@ -457,7 +490,10 @@ while 1:
                     for mobs in mobsN3:
                         if jouer == 0:
                             if mobs.x==player.x and mobs.y==player.y-1:
+                                player.image = a
                                 player.attack(mobs)
+                                update()
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte3.structure[player.y-1][player.x]=='h':
@@ -469,7 +505,10 @@ while 1:
                     for mobs in mobsN3:
                         if jouer == 0:
                             if mobs.x==player.x and mobs.y==player.y+1:
+                                player.image = b
                                 player.attack(mobs)
+                                update()
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte3.structure[player.y+1][player.x]=='h':
@@ -480,7 +519,10 @@ while 1:
                     for mobs in mobsN3:
                         if jouer == 0:
                             if mobs.x==player.x+1 and mobs.y==player.y:
+                                player.image = d
                                 player.attack(mobs)
+                                update()
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte3.structure[player.y][player.x+1]=='h':
@@ -505,7 +547,7 @@ while 1:
             if event.key ==K_5:
                     soin.lancer()
                     
-        if gameover:
+        if player.estmort:
             suite = 7                
 
         #fin du niveau 2 si le joueur atteind l'arrivee
@@ -515,10 +557,6 @@ while 1:
     #musique du niveau
     pygame.mixer.music.load("Musiques/Musique n4.wav")
     pygame.mixer.music.play(-1)
-    adjacent_gauche = None
-    adjacent_droite = None
-    adjacent_haut = None
-    adjacent_bas = None
     player.x = 30
     player.y = 47
     while suite==4:
@@ -526,10 +564,11 @@ while 1:
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("4")
+        Niveau = 4
         def_niveau.close
         carte4.generer()
         carte4.afficher(fenetre)
-        for mobs in mobsN1:
+        for mobs in mobsN4:
             if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                 fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
         fenetre.blit(player.image,(640,360))
@@ -544,7 +583,10 @@ while 1:
                     for mobs in mobsN4:
                         if jouer == 0:
                             if mobs.x==player.x-1 and mobs.y==player.y:
+                                player.image = c
                                 player.attack(mobs)
+                                update()
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte4.structure[player.y][player.x-1]=='h':
@@ -554,7 +596,9 @@ while 1:
                     for mobs in mobsN4:
                         if jouer == 0:
                             if mobs.x==player.x and mobs.y==player.y-1:
+                                player.image = a
                                 player.attack(mobs)
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte4.structure[player.y-1][player.x]=='h':
@@ -566,7 +610,9 @@ while 1:
                     for mobs in mobsN4:
                         if jouer == 0:
                             if mobs.x==player.x and mobs.y==player.y+1:
+                                player.image = b
                                 player.attack(mobs)
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte4.structure[player.y+1][player.x]=='h':
@@ -577,7 +623,9 @@ while 1:
                     for mobs in mobsN4:
                         if jouer == 0:
                             if mobs.x==player.x+1 and mobs.y==player.y:
+                                player.image = d
                                 player.attack(mobs)
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte4.structure[player.y][player.x+1]=='h':
@@ -602,7 +650,7 @@ while 1:
                 if event.key ==K_5:
                     soin.lancer()
                     
-        if gameover:
+        if player.estmort:
             suite = 7
 
         #fin du niveau 2 si le joueur atteind l'arrivee
@@ -612,10 +660,6 @@ while 1:
     #musique du niveau
     pygame.mixer.music.load("Musiques/Musique n5.wav")
     pygame.mixer.music.play(-1)
-    adjacent_gauche = None
-    adjacent_droite = None
-    adjacent_haut = None
-    adjacent_bas = None
     player.x = 30
     player.y = 47
     while suite == 5:
@@ -623,10 +667,11 @@ while 1:
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("5")
+        Niveau = 5
         def_niveau.close
         carte5.generer()
         carte5.afficher(fenetre)
-        for mobs in mobsN1:
+        for mobs in mobsN5:
             if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                 fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
         fenetre.blit(player.image,(640,360))
@@ -641,7 +686,9 @@ while 1:
                     for mobs in mobsN5:
                         if jouer == 0:
                             if mobs.x==player.x-1 and mobs.y==player.y:
+                                player.image = c
                                 player.attack(mobs)
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte5.structure[player.y][player.x-1]=='h':
@@ -651,7 +698,9 @@ while 1:
                     for mobs in mobsN5:
                         if jouer == 0:
                             if mobs.x==player.x and mobs.y==player.y-1:
+                                player.image = a
                                 player.attack(mobs)
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte5.structure[player.y-1][player.x]=='h':
@@ -662,8 +711,10 @@ while 1:
                 if event.key==K_DOWN:
                     for mobs in mobsN5:
                         if jouer == 0:
-                            if mobs.x==player.x and mobs.y==player.y+1:
+                           if mobs.x==player.x and mobs.y==player.y+1:
+                                player.image = b
                                 player.attack(mobs)
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte5.structure[player.y+1][player.x]=='h':
@@ -674,7 +725,9 @@ while 1:
                     for mobs in mobsN5:
                         if jouer == 0:
                             if mobs.x==player.x+1 and mobs.y==player.y:
+                                player.image = d
                                 player.attack(mobs)
+                                update()
                                 jouer = 1
                     if jouer !=1:
                         if carte5.structure[player.y][player.x+1]=='h':
@@ -699,7 +752,7 @@ while 1:
                 if event.key ==K_5:
                     soin.lancer()
                     
-        if gameover:
+        if player.estmort:
             suite = 7                
 
         #fin du niveau 2 si le joueur atteind l'arrivee
@@ -718,7 +771,7 @@ while 1:
             
     while suite==7:
         fond = pygame.image.load("Images/Game over.jpg").convert()
-        Recommencer = font2.render("Recommencer", 1, (255,0,0))
+        Recommencer = font2.render("Recommencer", 1, (51,0,0))
         fenetre.blit(fond,(0,0))
         fenetre.blit(Recommencer, (800, 670))
         pygame.display.flip()

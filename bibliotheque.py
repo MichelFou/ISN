@@ -12,12 +12,12 @@ taille_sprite = 72
 
 #competences de base
 
-discretion= 1
-attaque = 1
-defense = 1
-vitesse = 1
-degat = 1
-magie = 1
+discretion= 10
+attaque = 10
+defense = 10
+vitesse = 10
+degat = 10
+magie = 10
 
 
 
