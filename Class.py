@@ -1,35 +1,116 @@
-#Classe du joueur
+#Class des monstres, du joueur, de la carte et definitions
 import pygame
 pygame.init()
 from random import *
 from pygame.locals import*
 from bibliotheque import *
-import actions
 
+#Creation d'une fenetre pour pouvoir charger des images
 fenetre = pygame.display.set_mode((1083,812))
 
+#Mise en place du niveau
+def_niveau = open("carte.txt", "w")
+def_niveau.write("1")
+def_niveau.close()
+
+#Chargement dans des variables des differentes images du joueur
 a = pygame.image.load("Images/Hero-up.png")
 b = pygame.image.load("Images/Hero-down.png")
 c = pygame.image.load("Images/Hero-left.png")
 d = pygame.image.load("Images/Hero-right.png")
-Niveau = 0
+
+#affichage de la map
+class Niveau:
+    #initialisation
+    def __init__(self,fichier):
+        self.fichier = fichier
+        self.structure = 0
+    def generer(self):
+        #ouverture du fichier dee niveau demande
+        with open(self.fichier, "r")as fichier:
+            #creation liste structure
+            structure_niveau=[]
+            #lecture dans les lignes du fichier
+            for ligne in fichier:
+                #creation d'une liste des lignes
+                ligne_niveau=[]
+                #lecture de chaque sprite
+                for sprite in ligne:
+                    if sprite != '\n':
+                        #on ajoute le sprite a la fin de la liste ligne_niveau
+                        ligne_niveau.append(sprite)
+                #on ajoute cette liste a la fin de structure_niveau
+                structure_niveau.append(ligne_niveau)
+        #on sauvegarde la liste structure_niveau
+        self.structure = structure_niveau
+    def afficher(self, fenetre):
+        #on initialise toutes les images
+        gauche= pygame.image.load("Images/Fence - side-left.png").convert_alpha()
+        droite= pygame.image.load("Images/Fence - side-right.png").convert_alpha()
+        milieu= pygame.image.load("Images/Fence - front-middle.png").convert_alpha()
+        coin_gauche= pygame.image.load("Images/Fence - front-left.png").convert_alpha()
+        coin_droite= pygame.image.load("Images/Fence - front-right.png").convert_alpha()
+        tree = pygame.image.load("Images/tree.png").convert_alpha()
+        herbe = pygame.image.load("Images/grass.png").convert_alpha()
+        end = pygame.image.load("Images/arrive.png").convert_alpha()
+        rien = pygame.image.load("Images/rien.png").convert_alpha()
+        ligne_affichee = 0
+        num_ligne = 0
+        #on lit chaque ligne de self structure
+        for ligne in self.structure:
+            #si la ligne est situee a 6 sur l'axe des y du heros on continue ce qui definit un champs de vision
+            if num_ligne>player.y -6 and num_ligne<player.y+6:
+                case_affichee = 0
+                num_sprite = 0
+                #on lit dans les sprites
+                for sprite in ligne:
+                    #on definit x et y en fonction de la taille des sprites
+                    x=(case_affichee* taille_sprite)+280
+                    y=(ligne_affichee* taille_sprite)+10
+                    #si le sprite est situe a 6 sur l'axe des x on continue cela definit completemnt le champ de vision
+                    if num_sprite>player.x -6 and num_sprite<player.x+6:
+                        #on teste pour chaque sprite quelle lettre pour savoir quel ennemi ou texture afficher
+                        if sprite =='m':
+                            fenetre.blit(milieu,(x,y))
+                        elif sprite =='d':
+                            fenetre.blit(droite,(x,y))
+                        elif sprite =='g':
+                            fenetre.blit(gauche,(x,y))
+                        elif sprite =='l':
+                            fenetre.blit(coin_gauche,(x,y))
+                        elif sprite =='c':
+                            fenetre.blit(coin_droite,(x,y))
+                        elif sprite =='h':
+                            fenetre.blit(herbe,(x,y))
+                        elif sprite =='t':
+                            fenetre.blit(herbe,(x,y))
+                            fenetre.blit(tree,(x,y))
+                        elif sprite =='e':
+                            fenetre.blit(herbe,(x,y))
+                            fenetre.blit(end,(x,y))
+                        elif sprite == 'r':
+                            fenetre.blit(rien,(x,y))
+                        #on incremente l'endroit ou sera affichee la case
+                        case_affichee = case_affichee + 1
+                    #on incremente le numero du sprite teste pour evaluer si il se trouve dans le champ de vision
+                    num_sprite = num_sprite + 1
+                #on incremente la ligne ou sera affiche la case
+                ligne_affichee = ligne_affichee+1
+            #on incremente la ligne testee pour evaluer si elle est dans le champ de vision
+            num_ligne = num_ligne+1
 
 
-with open("carte.txt", "r")as fichier:
-    for ligne in fichier:
-        for sprite in ligne:
-            if sprite =="1":
-                Niveau = 1
-            if sprite =="2":
-                Niveau = 2
-            if sprite == "3":
-                Niveau = 3
-            if sprite == "4":
-                Niveau = 4
-            if sprite=="5":
-                Niveau = 5
+#on attribue a chaque texte de niveau une variable
+carte1 = Niveau("Niveaux/N1.txt")
+carte2 = Niveau("Niveaux/N2.txt")
+carte3 = Niveau("Niveaux/N3.txt")
+carte4 = Niveau("Niveaux/N4.txt")
+carte5 = Niveau("Niveaux/N5.txt")
 
+
+#Creation de la class du joueur
 class Player:
+        #Assignation des variables initiales
         def __init__(self):
                 self.level = 1
                 self.nextlevelxp = self.level*50
@@ -45,14 +126,13 @@ class Player:
                 self.x = 30
                 self.y = 47
                 self.estmort = False
-                self.hasarme = False
-                self.hasarmure = None
                 self.sort = None
                 self.armure = None
                 self.nextlevel = False
                 self.image = a
                 self.valeur = 0
-                
+
+        #Definitions des fonctions de deplacement
         def moveup(self):
                 self.image = a
                 self.y-=1
@@ -69,6 +149,7 @@ class Player:
                 self.image = d
                 self.x+=1
 
+        #Mise a jour des statistiques lors d'une montee de niveau
         def levelup(self):
                 self.pv += 5
                 self.pvmax += 5
@@ -78,8 +159,10 @@ class Player:
                 self.magie += 1
                 self.degat += 1
                 self.discretion += 1
+                self.level +=1
                 self.nextlevel = False
-
+                
+        #Fonction qui permet de mettre a jour l'etat du joueur
         def update(self):
                 if self.xp == self.nextlevelxp:
                         self.xp = 0
@@ -91,34 +174,28 @@ class Player:
                         self.levelup()
                 if self.pv <= 0:
                     self.estmort = True
-        
+
+        #Fonctions permettant l'equipement d'armures et d'armes
         def equiper_armure(self,armure):
-                if self.hasarmure:
-                        self.old_armure = self.armure
-                        self.defense -= self.old_armure.defense
-                        self.discretion -= self.old_armure.discretion
-                        self.vitesse -= self.old_armure.vitesse
-                        self.magie -= self.old_armure.magie
+                self.attaque += armure.attaque
                 self.defense += armure.defense
                 self.discretion += armure.discretion
                 self.vitesse += armure.vitesse
                 self.magie += armure.magie
-                self.armure = armure
-                self.hasarmure = True
+                stufflist.remove(armure)
+                del(armure)
         
-        def equiper_arme(self,arme_name):
-                if self.hasarme:
-                        self.attaque -= old_arme_name.attaque
-                        self.vitesse -= old_arme_name.vitesse
-                        self.degat -= old_arme_name.degat
-                        self.magie -= old_arme_name.magie
-                self.attaque += arme_name.attaque
-                self.vitesse += arme_name.vitesse
-                self.degat += arme_name.degat
-                self.magie += arme_name.magie
-                old_arme_name = arme_name
-                self.hasarme = True
+        def equiper_arme(self,arme):
+                self.attaque += arme.attaque
+                self.vitesse += arme.vitesse
+                self.defense += arme.defense
+                self.discretion += arme.discretion
+                self.degat += arme.degat
+                self.magie += arme.magie
+                stufflist.remove(arme)
+                del(arme)
 
+        #Fonction de calcul des degats
         def blesse(self,name):
                 if randint(1,30)<name.attaque:
                         if randint(1,30)>self.vitesse:
@@ -139,12 +216,18 @@ class Player:
                                                         mobslist = mobsN4
                                                     if sprite=="5":
                                                         mobslist = mobsN5
-                                        for i in range(0,500):
+                                        for i in range(0,100):
                                             fenetre.blit(self.image,(640,360))
                                             for mobs in mobslist:
                                                 if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                                                     fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
                                                     fenetre.blit(rendu_valeur,(670,320))
+                                            for armure in stufflist:
+                                                if armure.x > player.x-6 and armure.x < player.x+6 and armure.y > player.y-6 and armure.y < player.y+6:
+                                                    fenetre.blit(armure.image,(640+(armure.x-player.x)*72,360+(armure.y-player.y)*72))
+                                            for arme in stufflist:
+                                                if arme.x > player.x-6 and arme.x < player.x+6 and arme.y > player.y-6 and arme.y < player.y+6:
+                                                    fenetre.blit(arme.image,(640+(arme.x-player.x)*72,360+(arme.y-player.y)*72))
                                             pygame.display.flip()
                                             
                                 else:
@@ -163,13 +246,20 @@ class Player:
                                             mobslist = mobsN4
                                         if sprite=="5":
                                             mobslist = mobsN5
-                            for i in range(0,500):
+                            #Affichage de l'esquive le cas echeant                
+                            for i in range(0,100):
                                 fenetre.blit(self.image,(640,360))
                                 for mobs in mobslist:
                                     if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                                         fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
                                         rendu_esquive = font.render("Esquive!",1,(255,255,255))
                                         fenetre.blit(rendu_esquive,(670,320))
+                                for armure in stufflist:
+                                    if armure.x > player.x-6 and armure.x < player.x+6 and armure.y > player.y-6 and armure.y < player.y+6:
+                                        fenetre.blit(armure.image,(640+(armure.x-player.x)*72,360+(armure.y-player.y)*72))
+                                for arme in stufflist:
+                                    if arme.x > player.x-6 and arme.x < player.x+6 and arme.y > player.y-6 and arme.y < player.y+6:
+                                        fenetre.blit(arme.image,(640+(arme.x-player.x)*72,360+(arme.y-player.y)*72))
                                 pygame.display.flip()
                 else:
                     with open("carte.txt", "r")as fichier:
@@ -185,100 +275,404 @@ class Player:
                                     mobslist = mobsN4
                                 if sprite=="5":
                                     mobslist = mobsN5
-                    for i in range(0,500):
+                    #Affichage de l'echec le cas echeant                
+                    for i in range(0,100):
                         fenetre.blit(self.image,(640,360))
                         for mobs in mobslist:
                             if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                                     fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
                                     rendu_echec = font.render("Echec!",1,(51,0,0))
-                                    fenetre.blit(rendu_echec,(660+(self.x-player.x)*72,320+(self.y-player.y)*72))
+                                    fenetre.blit(rendu_echec,(660+(name.x-player.x)*72,320+(name.y-player.y)*72))
                         pygame.display.flip()
                 if self.pv <= 0:
                     self.estmort = True
+                    
+        #Fonction qui permet au joueur d'attaquer
         def attack(self,name):
                 name.blesse(self)
 
+#Definition des statistiques des armures puis des armes
 class Armure:
         def __init__(self):
                 self.discretion = 0
                 self.defense = 0
                 self.vitesse = 0
                 self.magie = 0
-        class Plastrondecuivre:
-                def __init__(self):
-                        self.discretion = -1
-                        self.defense = 3
-                        self.vitesse = -1
-                        self.magie = 0
-        class Capedinvisibilite:
-                def __init__(self):
-                        self.discretion = 2
-                        self.vitesse = 2
-                        self.defense = 0
-                        self.magie = 0
-        class Manteaudevoleur:
-                def __init__(self):
-                        self.discretion = 1
-                        self.defense = -1
-                        self.vitesse = 2
-                        self.magie = 0
-        class Armuredeplaques:
-                def __init__(self):
-                        self.discretion = -2
-                        self.defense = 4
-                        self.vitesse = -2
-                        self.magie = 0
-        class Robedemage:
-                def __init__(self):
-                        self.discretion = 0
-                        self.defense = -2
-                        self.vitesse = 1
-                        self.magie = 3
-
+class Plastrondecuivre(Armure):
+        def __init__(self):
+                self.discretion = -1
+                self.defense = 3
+                self.vitesse = -1
+                self.magie = 0
+                self.attaque = 0
+                self.degat = 0
+                self.image = pygame.image.load("Images/Armor-Chest.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+class Capedinvisibilite(Armure):
+        def __init__(self):
+                self.discretion = 2
+                self.vitesse = 2
+                self.defense = 0
+                self.magie = 0
+                self.degat = 0
+                self.attaque = 0
+                self.image = pygame.image.load("Images/Armor-Chest.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+class Manteaudevoleur(Armure):
+        def __init__(self):
+                self.discretion = 1
+                self.defense = -1
+                self.vitesse = 2
+                self.magie = 0
+                self.degat = 0
+                self.attaque = 0
+                self.image = pygame.image.load("Images/Armor-Chest.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+class Armuredeplaques(Armure):
+        def __init__(self):
+                self.discretion = -2
+                self.defense = 4
+                self.vitesse = -2
+                self.magie = 0
+                self.degat = 0
+                self.attaque = 0
+                self.image = pygame.image.load("Images/Armor-Chest.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+class Robedemage(Armure):
+        def __init__(self):
+                self.discretion = 0
+                self.defense = -2
+                self.vitesse = 1
+                self.magie = 3
+                self.degat = 0
+                self.attaque = 0
+                self.image = pygame.image.load("Images/Armor-Chest.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
 class Arme:
         def __init__(self):
                 self.attaque = 0
                 self.vitesse = 0
                 self.degat = 0
                 self.magie = 0
-        class Epee:
-                def __init__(self):
-                        self.attaque = 2
-                        self.vitesse = -1
-                        self.degat = 2
-                        self.magie = 0
-        class Masselourde:
-                def __init__(self):
-                        self.attaque = -2
-                        self.vitesse = -2
-                        self.degat = 4
-                        self.magie = 0
-        class Dague:
-                def __init__(self):
-                        self.attaque = 1
-                        self.vitesse = 2
-                        self.degat = 0
-                        self.magie = 0
-        class Baton:
-                def __init__(self):
-                        self.attaque = 0
-                        self.vitesse = 0
-                        self.degat = -1
-                        self.magie = 3
-        class Hache:
-                def __init__(self):
-                        self.attaque = -1
-                        self.vitesse = -1
-                        self.degat = 2
-                        self.magie = 0
-        class Masseapiques:
-                def __init__(self):
-                        self.attaque = -1
-                        self.vitesse = -1
-                        self.degat = 3
-                        self.magie = 0
+class Epee(Arme):
+        def __init__(self):
+                self.attaque = 2
+                self.vitesse = -1
+                self.degat = 2
+                self.magie = 0
+                self.discretion = 0
+                self.defense = 0
+                self.image = pygame.image.load("Images/Sword.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+class Masselourde(Arme):
+        def __init__(self):
+                self.attaque = -2
+                self.vitesse = -2
+                self.degat = 4
+                self.magie = 0
+                self.discretion = 0
+                self.defense = 0
+                self.image = pygame.image.load("Images/Sword.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+class Dague(Arme):
+        def __init__(self):
+                self.attaque = 1
+                self.vitesse = 2
+                self.degat = 0
+                self.magie = 0
+                self.discretion = 0
+                self.defense = 0
+                self.image = pygame.image.load("Images/Sword.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+class Baton(Arme):
+        def __init__(self):
+                self.attaque = 0
+                self.vitesse = 0
+                self.degat = -1
+                self.magie = 3
+                self.discretion = 0
+                self.defense = 0
+                self.image = pygame.image.load("Images/Sword.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+class Hache(Arme):
+        def __init__(self):
+                self.attaque = -1
+                self.vitesse = -1
+                self.degat = 2
+                self.magie = 0
+                self.discretion = 0
+                self.defense = 0
+                self.image = pygame.image.load("Images/Sword.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
+class Masseapiques(Arme):
+        def __init__(self):
+                self.attaque = -1
+                self.vitesse = -1
+                self.degat = 3
+                self.magie = 0
+                self.discretion = 0
+                self.defense = 0
+                self.image = pygame.image.load("Images/Sword.png").convert_alpha()
+                valide = False
+                while not valide:
+                    self.x = randint(6,55)
+                    self.y = randint(7,48)
+                    with open("carte.txt", "r")as fichier:
+                        for ligne in fichier:
+                            for sprite in ligne:
+                                if sprite =="1":
+                                    carte = carte1
+                                if sprite =="2":
+                                    carte = carte2
+                                if sprite == "3":
+                                    carte = carte3
+                                if sprite == "4":
+                                    carte = carte4
+                                if sprite=="5":
+                                    carte = carte5
+                    if carte.structure[self.y][self.x]=='h':
+                        valide = True
 
+#Creation de la class generale des monstres
 class Mobs:
+        #Variables initiales utilisables
         def __init__(self):
                 self.pv = 0
                 self.vitesse = 0
@@ -292,65 +686,108 @@ class Mobs:
                 self.move = False
                 self.mobslist = []
                 self.niveau = 1
+        #Fonction qui joue le role d'intelligence artificielle        
         def update(self):
-                if player.x == self.x or player.y == self.y:
-                        if player.y - 1 == self.y:
+                        move = 1
+                        #Si le joueur est a portee, on l'attaque
+                        if player.y - 1 == self.y and player.x==self.x:
                                 adjacent_bas = self
                                 self.attack(player)
-                        if player.y + 1 == self.y:
+                                move = 0
+                        if player.y + 1 == self.y and player.x==self.x:
                                 adjacent_haut = self
                                 self.attack(player)
-                        if player.x - 1 == self.x:
+                                move = 0
+                        if player.x - 1 == self.x and player.y==self.y:
                                 adjacent_droite = self
                                 self.attack(player)
-                        if player.x + 1 == self.x:
+                                move = 0
+                        if player.x + 1 == self.x and player.y==self.y:
                                 adjacent_gauche = self
                                 self.attack(player)
-                else:
-                                diffx = abs(player.x-self.x)
-                                diffy = abs(player.y-self.y)
-                                if diffx > diffy:
-                                    if self.x > player.x:
-                                        self.moveleft()
-                                    elif self.x < player.x:
-                                        self.moveright()
-                                elif diffy > diffx:
-                                    if self.y > player.y:
-                                        self.moveup()
-                                    elif self.y < player.y:
-                                        self.movedown()
-                                elif diffy == diffx:
-                                    if self.x > player.x:
-                                        self.moveleft()
-                                    elif self.x < player.x:
-                                        self.moveright()
-                                    elif self.y > player.y:
-                                        self.moveup()
-                                    elif self.y < player.y:
-                                        self.movedown()
+                                move = 0
+                        #Sinon si l'on attaque pas, on regarde de quel cote faut-il se deplacer
+                        diffx = abs(player.x-self.x)
+                        diffy = abs(player.y-self.y)
+                        if diffx <= 6 and diffy <= 6 and move:
+                                if randint(0,self.perception)>player.discretion:
+                                    if diffx > diffy:
+                                        if self.x > player.x:
+                                            self.moveleft()
+                                        elif self.x < player.x:
+                                            self.moveright()
+                                    elif diffy > diffx:
+                                        if self.y > player.y:
+                                            self.moveup()
+                                        elif self.y < player.y:
+                                            self.movedown()
+                                    elif diffy == diffx:
+                                            with open("carte.txt", "r")as fichier:
+                                                for ligne in fichier:
+                                                    for sprite in ligne:
+                                                        if sprite =="1":
+                                                            carte = carte1
+                                                            mobslist = mobsN1
+                                                        if sprite =="2":
+                                                            carte = carte2
+                                                            mobslist = mobsN2
+                                                        if sprite == "3":
+                                                            carte = carte3
+                                                            mobslist = mobsN3
+                                                        if sprite == "4":
+                                                            carte = carte4
+                                                            mobslist = mobsN4
+                                                        if sprite=="5":
+                                                            carte = carte5
+                                                            mobslist = mobsN5
+                                            if self.x > player.x:
+                                                for mobs in mobslist:
+                                                    if self.x-1 == mobs.x:
+                                                        move+=1
+                                                if move != 0:
+                                                        self.moveleft()
+                                                else:
+                                                        if self.y > player.y:
+                                                            self.moveup()
+                                                        elif self.y < player.y:
+                                                            self.movedown()
+                                            elif self.x < player.x:
+                                                for mobs in mobslist:
+                                                    if self.x+1 == mobs.x:
+                                                        move+=1
+                                                if move != 0:
+                                                        self.moveright()
+                                                else:
+                                                        if self.y > player.y:
+                                                            self.moveup()
+                                                        elif self.y < player.y:
+                                                            self.movedown()
+        #Fonctions qui permettent de se deplacer
         def moveleft(self):
                 move = 0
                 with open("carte.txt", "r")as fichier:
                     for ligne in fichier:
                         for sprite in ligne:
                             if sprite =="1":
-                                carte = actions.carte1
+                                carte = carte1
                                 mobslist = mobsN1
                             if sprite =="2":
-                                carte = actions.carte2
+                                carte = carte2
                                 mobslist = mobsN2
                             if sprite == "3":
-                                carte = actions.carte3
+                                carte = carte3
                                 mobslist = mobsN3
                             if sprite == "4":
-                                carte = actions.carte4
+                                carte = carte4
                                 mobslist = mobsN4
                             if sprite=="5":
-                                carte = actions.carte5
+                                carte = carte5
                                 mobslist = mobsN5
+                #On regarde si un monstre est a cote
                 for mobs in mobslist:
                     if self.x-1 == mobs.x and self.y == mobs.y:
                         move+=1
+                #Si la variable move est a 0, cela signifie qu'il n'y a pas de monstre de ce cote : on verifie alors s'il y a un autre obstacle
                 if carte.structure[self.y][self.x-1]=='h' and move==0:
                         self.x -= 1
                     
@@ -360,19 +797,19 @@ class Mobs:
                     for ligne in fichier:
                         for sprite in ligne:
                             if sprite =="1":
-                                carte = actions.carte1
+                                carte = carte1
                                 mobslist = mobsN1
                             if sprite =="2":
-                                carte = actions.carte2
+                                carte = carte2
                                 mobslist = mobsN2
                             if sprite == "3":
-                                carte = actions.carte3
+                                carte = carte3
                                 mobslist = mobsN3
                             if sprite == "4":
-                                carte = actions.carte4
+                                carte = carte4
                                 mobslist = mobsN4
                             if sprite=="5":
-                                carte = actions.carte5
+                                carte = carte5
                                 mobslist = mobsN5
                 for mobs in mobslist:
                     if self.x+1 == mobs.x and self.y == mobs.y:
@@ -385,19 +822,19 @@ class Mobs:
                     for ligne in fichier:
                         for sprite in ligne:
                             if sprite =="1":
-                                carte = actions.carte1
+                                carte = carte1
                                 mobslist = mobsN1
                             if sprite =="2":
-                                carte = actions.carte2
+                                carte = carte2
                                 mobslist = mobsN2
                             if sprite == "3":
-                                carte = actions.carte3
+                                carte = carte3
                                 mobslist = mobsN3
                             if sprite == "4":
-                                carte = actions.carte4
+                                carte = carte4
                                 mobslist = mobsN4
                             if sprite=="5":
-                                carte = actions.carte5
+                                carte = carte5
                                 mobslist = mobsN5
                 for mobs in mobslist:
                     if self.x == mobs.x and self.y-1 == mobs.y:
@@ -410,29 +847,30 @@ class Mobs:
                     for ligne in fichier:
                         for sprite in ligne:
                             if sprite =="1":
-                                carte = actions.carte1
+                                carte = carte1
                                 mobslist = mobsN1
                             if sprite =="2":
-                                carte = actions.carte2
+                                carte = carte2
                                 mobslist = mobsN2
                             if sprite == "3":
-                                carte = actions.carte3
+                                carte = carte3
                                 mobslist = mobsN3
                             if sprite == "4":
-                                carte = actions.carte4
+                                carte = carte4
                                 mobslist = mobsN4
                             if sprite=="5":
-                                carte = actions.carte5
+                                carte = carte5
                                 mobslist = mobsN5
                 for mobs in mobslist:
                     if self.x == mobs.x and self.y+1 == mobs.y:
                         move+=1
                 if carte.structure[self.y+1][self.x]=='h' and move==0:
-                        self.x += 1
-
+                        self.y += 1
+                        
+        #Fonction semblable a celle du joueur, qui calcule les degats subis
         def blesse(self,name):
-                if randint(1,30)<name.attaque:
-                        if randint(1,30)>self.vitesse:
+                if randint(1,10)<name.attaque:
+                        if randint(1,50)>self.vitesse:
                                 self.valeur = randint(1,name.degat)-randint(1,self.defense)
                                 if self.valeur > 0:
                                         self.pv -= self.valeur
@@ -442,15 +880,20 @@ class Mobs:
                                                 for sprite in ligne:
                                                     if sprite =="1":
                                                         mobslist = mobsN1
+                                                        niveau=1
                                                     if sprite =="2":
                                                         mobslist = mobsN2
+                                                        niveau=2
                                                     if sprite == "3":
                                                         mobslist = mobsN3
+                                                        niveau=3
                                                     if sprite == "4":
                                                         mobslist = mobsN4
+                                                        niveau=4
                                                     if sprite=="5":
                                                         mobslist = mobsN5
-                                        for i in range(0,500):
+                                                        niveau=5
+                                        for i in range(0,100):
                                             for mobs in mobslist:
                                                 if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                                                     fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
@@ -468,21 +911,32 @@ class Mobs:
                                     for sprite in ligne:
                                         if sprite =="1":
                                             mobslist = mobsN1
+                                            niveau=1
                                         if sprite =="2":
                                             mobslist = mobsN2
+                                            niveau=2
                                         if sprite == "3":
                                             mobslist = mobsN3
+                                            niveau=3
                                         if sprite == "4":
                                             mobslist = mobsN4
+                                            niveau=4
                                         if sprite=="5":
                                             mobslist = mobsN5
-                            for i in range(0,500):
+                                            niveau=5
+                            for i in range(0,100):
                                 fenetre.blit(player.image,(640,360))
                                 for mobs in mobslist:
                                     if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                                         fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
                                         rendu_esquive = font.render("Esquive!",1,(255,0,0))
                                         fenetre.blit(rendu_esquive,(660+(self.x-player.x)*72,320+(self.y-player.y)*72))
+                                for armure in stufflist:
+                                                if armure.x > player.x-6 and armure.x < player.x+6 and armure.y > player.y-6 and armure.y < player.y+6:
+                                                    fenetre.blit(armure.image,(640+(armure.x-player.x)*72,360+(armure.y-player.y)*72))
+                                for arme in stufflist:
+                                    if arme.x > player.x-6 and arme.x < player.x+6 and arme.y > player.y-6 and arme.y < player.y+6:
+                                        fenetre.blit(arme.image,(640+(arme.x-player.x)*72,360+(arme.y-player.y)*72))
                                 pygame.display.flip()
                 else:
                     with open("carte.txt", "r")as fichier:
@@ -490,40 +944,52 @@ class Mobs:
                             for sprite in ligne:
                                 if sprite =="1":
                                     mobslist = mobsN1
+                                    niveau=1
                                 if sprite =="2":
                                     mobslist = mobsN2
+                                    niveau=2
                                 if sprite == "3":
                                     mobslist = mobsN3
+                                    niveau=3
                                 if sprite == "4":
                                     mobslist = mobsN4
+                                    niveau=4
                                 if sprite=="5":
                                     mobslist = mobsN5
-                    for i in range(0,500):
+                                    niveau=5
+                    for i in range(0,100):
                         fenetre.blit(player.image,(640,360))
                         for mobs in mobslist:
                             if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                                     fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
                                     rendu_echec = font.render("Echec!",1,(255,0,0))
                                     fenetre.blit(rendu_echec,(670,320))
+                        for armure in stufflist:
+                            if armure.x > player.x-6 and armure.x < player.x+6 and armure.y > player.y-6 and armure.y < player.y+6:
+                                fenetre.blit(armure.image,(640+(armure.x-player.x)*72,360+(armure.y-player.y)*72))
+                        for arme in stufflist:
+                            if arme.x > player.x-6 and arme.x < player.x+6 and arme.y > player.y-6 and arme.y < player.y+6:
+                                fenetre.blit(arme.image,(640+(arme.x-player.x)*72,360+(arme.y-player.y)*72))
                         pygame.display.flip()
                         
                 if self.pv <= 0:
                     player.xp += self.xp
-                    if self.niveau == 1:
+                    if niveau == 1:
                         mobsN1.remove(self)
-                    if self.niveau == 2:
+                    if niveau == 2:
                         mobsN2.remove(self)
-                    if self.niveau == 3:
+                    if niveau == 3:
                         mobsN3.remove(self)
-                    if self.niveau == 4:
+                    if niveau == 4:
                         mobsN4.remove(self)
-                    if self.niveau == 5:
+                    if niveau == 5:
                         mobsN5.remove(self)
                     del(self)
 
         def attack(self,name):
                 name.blesse(self)
-        
+
+#Definitions de tous les monstres existants, avec heritage des fonctions de la class Mobs
 class Loup(Mobs):
         def __init__(self,x,y):
                 self.x = x
@@ -660,7 +1126,8 @@ class Cavalier(Mobs):
                 self.move = False
                 self.mobslist = []
                 self.niveau = 1
-  
+
+#Class des sorts, avec leur duree, leur temps de rechargement etc  
 class Spell:
         def __init__(self):
                 self.duree = 0
@@ -671,33 +1138,43 @@ class Spell:
                 self.actif = 0
                 self.dispo = 0
                 self.tempsecoule = 0
+                self.affichage="Disponible"
         class Berserk:
                 def __init__(self):
                         self.duree = 7 + int(0.2*player.magie)
                         self.recharge = 20 - int(0.5*player.magie)
                         self.actif = 0
                         self.dispo = 1
+                        self.affichage="Disponible"
                         self.tempsecoule = 0
                         self.tempsrecharge = 0
                 def update(self):
-                        if self.actif:
+                        if self.actif==1:
                                 self.tempsecoule += 1
+                                print "a"
                         if self.tempsrecharge >= self.recharge:
                                 self.tempsecoule = 0
                                 self.dispo = 1
+                                self.affichage="Disponible"
+                                print "b"
                         if self.tempsecoule >= self.duree:
                                 player.attaque -= 2
                                 player.vitesse -= 2
                                 player.degat -= 1
                                 self.actif = 0
+                                self.affichage="Indisponible"
                                 self.tempsrecharge += 1
+                                print "c"
                 def lancer(self):
-                        if self.dispo:
+                        if self.dispo==1:
                                 player.attaque +=2
                                 player.vitesse += 2
                                 player.degat += 1
                                 self.dispo = 0
                                 self.actif = 1
+                                self.affichage="En utilisation"
+                                print"d"
+                    
         class Corps_Dacier:
                 def __init__(self):
                         self.duree = 7 + int(0.2*player.magie)
@@ -706,21 +1183,25 @@ class Spell:
                         self.dispo = 1
                         self.tempsecoule = 0
                         self.tempsrecharge = 0
+                        self.affichage="Disponible"
                 def update(self):
                         if self.actif:
                                 self.tempsecoule += 1
                         if self.tempsrecharge >= self.recharge:
                                 self.tempsecoule = 0
                                 self.dispo = 1
+                                self.affichage="Disponible"
                         if self.tempsecoule >= self.duree:
                                 player.defense -= 4
                                 self.actif = 0
                                 self.tempsrecharge += 1
+                                self.affichage="Indisponible"
                 def lancer(self):
                         if self.dispo:
                                 player.defense += 4
                                 self.dispo = 0
                                 self.actif = 1
+                                self.affichage="En utilisation"
                                 
         class Arme_Enflammee:
                 def __init__(self):
@@ -730,23 +1211,27 @@ class Spell:
                         self.dispo = 1
                         self.tempsecoule = 0
                         self.tempsrecharge = 0
+                        self.affichage="Disponible"
                 def update(self):
                         if self.actif:
                                 self.tempsecoule += 1
                         if self.tempsrecharge >= self.recharge:
                                 self.tempsecoule = 0
                                 self.dispo = 1
+                                self.affichage="Disponible"
                         if self.tempsecoule >= self.duree:
                                 player.attaque -= 4
                                 player.degat -= 1
                                 self.actif = 0
                                 self.tempsrecharge += 1
+                                self.affichage="Indisponible"
                 def lancer(self):
                         if self.dispo:
                                 player.attaque +=4
                                 player.degat += 1
                                 self.dispo = 0
                                 self.actif = 1
+                                self.affichage="En utilisation"
                                 
         class Invisibilite:
                 def __init__(self):
@@ -756,42 +1241,47 @@ class Spell:
                         self.dispo = 1
                         self.tempsecoule = 0
                         self.tempsrecharge = 0
+                        self.affichage="Disponible"
                 def update(self):
                         if self.actif:
                                 self.tempsecoule += 1
                         if self.tempsrecharge >= self.recharge:
                                 self.tempsecoule = 0
                                 self.dispo = 1
+                                self.affichage="Disponible"
                         if self.tempsecoule >= self.duree:
                                 player.discretion -= 30
                                 self.actif = 0
                                 self.tempsrecharge += 1
+                                self.affichage="Indisponible"
                 def lancer(self):
                         if self.dispo:
                                 player.discretion += 30
                                 self.dispo = 0
                                 self.actif = 1
+                                self.affichage="En utilisation"
                                 
         class Soin:
                 def __init__(self):
                         self.recharge = 50 - player.magie
                         self.dispo = 1
                         self.tempsrecharge = 0
+                        self.affichage="Disponible"
                 def update(self):
                         if not self.dispo:
                                 self.tempsrecharge += 1
                         if self.tempsrecharge == self.recharge:
                                 self.dispo = 1
                                 self.tempsrecharge = 0
+                                self.affichage="Indisponible"
                 def lancer(self):
                         if self.dispo:
                                 player.pv = player.pvmax
-                                self.dispo = 0    
+                                self.dispo = 0
+                                self.affichage="Disponible"    
                                 
-                        
-                                
-                                
-player=Player()                       
+#Instanciation de toutes les entites                             
+player = Player()                       
 spell = Spell()
 spellslist = []
 berserk = spell.Berserk()
@@ -800,14 +1290,10 @@ arme_enflammee = spell.Arme_Enflammee()
 invisibilite = spell.Invisibilite()
 soin = spell.Soin()
 
+#Ajout dans une liste
 spellslist.extend((berserk,corps_dacier,arme_enflammee,invisibilite,soin))
 
-def spellsupdate():
-    for spell in spellslist:
-        spell.update()
-
 mobs = Mobs()
-
 mobsN1 = []
 mobsN2 = []
 mobsN3 = []
@@ -962,7 +1448,43 @@ mobsN3.extend((squelette1N3,squelette2N3,squelette3N3,squelette4N3,squelette5N3,
 mobsN4.extend((loup1N4,loup2N4,loup3N4,squelette1N4,squelette2N4,squelette3N4,squelette4N4,squelette5N4,squelette6N4,squelette7N4,squelette8N4,centaure1N4,centaure2N4,centaure3N4,cavalier1N4,cavalier2N4,cavalier3N4,cavalier4N4,cavalier5N4,cavalier6N4,mort_vivant1N4,mort_vivant2N4,araignee1N4,araignee2N4,orc1N4,orc2N4,gobelin1N4,gobelin2N4,gobelin3N4,gobelin4N4,gobelin5N4,gobelin6N4))
 mobsN5.extend((loup1N5,loup2N5,loup3N5,loup4N5,squelette1N5,squelette2N5,squelette3N5,squelette4N5,centaure1N5,centaure2N5,cavalier1N5,cavalier2N5,cavalier3N5,mort_vivant1N5,mort_vivant2N5,araignee1N5,araignee2N5,araignee3N5,araignee4N5,orc1N5,orc2N5,orc3N5,persephon))
 
+armure = Armure()
+arme = Arme()
+carte1.generer()
+epee = Epee()
+masselourde = Masselourde()
+dague = Dague()
+baton = Baton()
+hache = Hache()
+masseapiques = Masseapiques()
+plastrondecuivre = Plastrondecuivre()
+capedinvisiblite = Capedinvisibilite()
+manteaudevoleur = Manteaudevoleur()
+armuredeplaques = Armuredeplaques()
+robedemage = Robedemage()
+stufflist = []
+stufflist.extend((epee,masselourde,dague,baton,hache,masseapiques,plastrondecuivre,capedinvisiblite,manteaudevoleur,armuredeplaques,robedemage))
 
+def stuffinst():
+        stufflist = []
+        epee = Epee()
+        masselourde = Masselourde()
+        dague = Dague()
+        baton = Baton()
+        hache = Hache()
+        masseapiques = Masseapiques()
+        plastrondecuivre = Plastrondecuivre()
+        capedinvisiblite = Capedinvisibilite()
+        manteaudevoleur = Manteaudevoleur()
+        armuredeplaques = Armuredeplaques()
+        robedemage = Robedemage()
+        stufflist.extend((epee,masselourde,dague,baton,hache,masseapiques,plastrondecuivre,capedinvisiblite,manteaudevoleur,armuredeplaques,robedemage))
+    
+#Definitions des mises a jour
+
+def spellsupdate():
+    for spell in spellslist:
+        spell.update()
 
 def mobsN1update():
     for mobs in mobsN1:
@@ -992,25 +1514,24 @@ def mobsniveau():
         if Niveau == 5:
                 mobslist = mobsN5
 
-
 def update():
     with open("carte.txt", "r")as fichier:
         for ligne in fichier:
             for sprite in ligne:
                 if sprite =="1":
-                    actions.carte1.afficher(fenetre)
+                    carte1.afficher(fenetre)
                     Niveau = 1
                 if sprite =="2":
-                    actions.carte2.afficher(fenetre)
+                    carte2.afficher(fenetre)
                     Niveau = 2
                 if sprite == "3":
-                    actions.carte3.afficher(fenetre)
+                    carte3.afficher(fenetre)
                     Niveau = 3
                 if sprite == "4":
-                    actions.carte4.afficher(fenetre)
+                    carte4.afficher(fenetre)
                     Niveau = 4
                 if sprite=="5":
-                    actions.carte5.afficher(fenetre)
+                    carte5.afficher(fenetre)
                     Niveau = 5
     if Niveau == 1:
             mobsN1update()
@@ -1033,12 +1554,6 @@ font2 = pygame.font.SysFont("Gabriola", 70)
 font3 = pygame.font.SysFont("Gabriola",48)
 Trapped = pygame.font.SysFont("Gabriola",110)
 
-#rendre tous les sorts disponibles
-affichage_be="disponible"
-affichage_ca="disponible"
-affichage_aa="disponible"
-affichage_in="disponible"
-affichage_soin="disponible"
 
 def hud():
         #mise en place du fond
@@ -1066,21 +1581,21 @@ def hud():
         fenetre.blit(slash,(120,230))
         ecrit_be= font.render ("Berserk-touche 1",1,(255,0,0))
         fenetre.blit(ecrit_be,(30,310))
-        dispo_be = font.render(str(affichage_be),1,(172,35,220))
+        dispo_be = font.render(str(berserk.affichage),1,(172,35,220))
         fenetre.blit(dispo_be,(100,340))
         ecrit_ca = font.render ("Corps d'acier-touche 2",1,(255,0,0))
         fenetre.blit(ecrit_ca,(0,410))
-        dispo_ca = font.render(str(affichage_ca),1,(172,35,220))
+        dispo_ca = font.render(str(corps_dacier.affichage),1,(172,35,220))
         fenetre.blit(dispo_ca,(100,440))
         ecrit_aa = font.render ("Arme d'acier-touche 3",1,(255,0,0))
         fenetre.blit(ecrit_aa,(0,510))
-        dispo_aa = font.render(str(affichage_aa),1,(172,35,220))
+        dispo_aa = font.render(str(arme_enflammee.affichage),1,(172,35,220))
         fenetre.blit(dispo_aa,(100,540))
         ecrit_in = font.render ("Invisibilite-touche 4",1,(255,0,0))
         fenetre.blit(ecrit_in,(30,610))
-        dispo_in = font.render(str(affichage_in),1,(172,35,220))
+        dispo_in = font.render(str(invisibilite.affichage),1,(172,35,220))
         fenetre.blit(dispo_in,(100,640))
         ecrit_soin = font.render ("Soin-touche 5",1,(255,0,0))
         fenetre.blit(ecrit_soin,(70,710))
-        dispo_soin = font.render(str(affichage_soin),1,(172,35,220))
+        dispo_soin = font.render(str(soin.affichage),1,(172,35,220))
         fenetre.blit(dispo_soin,(100,740))

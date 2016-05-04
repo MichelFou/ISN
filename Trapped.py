@@ -1,7 +1,6 @@
 # -*- coding: cp1252 -*-
 import pygame
 from pygame.locals import *
-from actions import *
 from Class import *
 from bibliotheque import *
 #initialisation pygame
@@ -12,6 +11,7 @@ icone=pygame.image.load("Images/Hero-right.png")
 pygame.display.set_icon(icone)
 pygame.display.set_caption("Trapped!")
 
+#Lancement de la boucle principale pour que le jeu puisse recommencer
 while 1:
     #mise en place de la fenetre
     fond = pygame.image.load("Images/FOND.jpg").convert()
@@ -19,8 +19,10 @@ while 1:
     pygame.display.flip()
     menu = 1
     choix = 4
+    #Lancement de la musique
     pygame.mixer.music.load("Musiques/Musique menu.wav")
     pygame.mixer.music.play(-1)
+    #boucle du menu
     while menu:
         if choix == 4:
             #ecriture du texte du menu
@@ -35,6 +37,7 @@ while 1:
             rendu_titre = Trapped.render("Trapped!",1,(0,0,0))
             fenetre.blit(rendu_titre,(100,77))
             pygame.display.flip()
+            #Verification si il y a un clic dans une des zones du menu
             for event in pygame.event.get():
                 if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>794 and event.pos[0]<910 and event.pos[1]<524 and event.pos[1]>465 :
                     choix = 1 # Jouer
@@ -52,9 +55,9 @@ while 1:
             fenetre.blit (fond,(0,0))
             pygame.display.flip()
             while choix==2:
-                #Ã©criture du texte du menu
+                #Ecriture du texte du menu
                 pygame.time.Clock().tick(30)
-                rendu_inst1 = font.render("Le but du jeu est de s'enfuir du chateau ",1,(51,0,0))
+                rendu_inst1 = font.render("Le but du jeu est de s'enfuir du chateau",1,(51,0,0))
                 fenetre.blit(rendu_inst1,(35,79))
                 rendu_inst2 = font.render("a l'aide des fleches directionnelles.",1,(51,0,0))
                 fenetre.blit(rendu_inst2,(35,139))
@@ -227,51 +230,77 @@ while 1:
                         menu = 0
                         #entree dans la nouvelle boucle
                         suite = 1
-    
-    player.attaque = attaque
+    #attribution des points de competence à l'entité player 
+    player.attaque = attaque+30
     player.defense = defense
     player.vitesse = vitesse
-    player.degat = degat
+    player.degat = degat+20
     player.discretion = discretion
     player.magie = magie
     #boucle du niveau 1
     #musique du niveau
     pygame.mixer.music.load("Musiques/Musique n1.wav")
     pygame.mixer.music.play(-1)
+    #placement du personnage
     player.x = 30
-    player.y = 47
+    player.y = 47    
     while suite==1:
+        #affichage du hud
         hud()
-        #initialisation de la carte
+        Niveau = 1
+        #ecriture du la variable de niveau dans un document texte pour pouvoir etre recuperee dans les autres fichiers
         def_niveau = open("carte.txt", "w")
         def_niveau.write("1")
-        Niveau = 1
-        def_niveau.close
+        def_niveau.close()
+        #generation de la carte
         carte1.generer()
         carte1.afficher(fenetre)
+        #verification si un ennemi est dans le champ de vision du joueur
         for mobs in mobsN1:
-            if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
+            if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:  
+              #affichage de celui ci
                 fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
+        for armure in stufflist:
+            if armure.x > player.x-6 and armure.x < player.x+6 and armure.y > player.y-6 and armure.y < player.y+6:
+                fenetre.blit(armure.image,(640+(armure.x-player.x)*72,360+(armure.y-player.y)*72))
+                if armure.x == player.x and armure.y == player.y:
+                        player.equiper_armure(armure)
+        for arme in stufflist:
+            if arme.x > player.x-6 and arme.x < player.x+6 and arme.y > player.y-6 and arme.y < player.y+6:
+                fenetre.blit(arme.image,(640+(arme.x-player.x)*72,360+(arme.y-player.y)*72))
+                if arme.x == player.x and arme.y == player.y:
+                        player.equiper_arme(arme)
+        #affichage du personnage au centre de l'ecran
         fenetre.blit(player.image,(640,360))
         pygame.display.flip()
+        #attente de pression de touches
         for event in pygame.event.get():
             jouer = 0
+            #arret du programme si clic croix
             if event.type == QUIT:
                         pygame.quit()
                         exit()
             if event.type == KEYDOWN:
+              #si clic sur la fleche droite
                 if event.key==K_LEFT:
+                  #verification si il y a un ennemi proche de lui
                     for mobs in mobsN1:
+                      #si il n'a pas joue il attaque
                         if jouer == 0:
                             if mobs.x==player.x-1 and mobs.y==player.y:
                                 player.image = c
                                 player.attack(mobs)
+                                #on met a jour
                                 update()
+                                #le joueur a joue
                                 jouer = 1
+                    #si il n'y a pas de monstres proches et que la case est de l'herbe ou la fin, il avance
                     if jouer !=1:
-                        if carte1.structure[player.y][player.x-1]=='h':
+                        if carte1.structure[player.y][player.x-1]=='h' or carte1.structure[player.y][player.x-1]=='e':
                             player.moveleft()
+                            #on met a jour
                             update()
+                #si clic sur la fleche haute il se passe la meme chose que plus haut
                 if event.key==K_UP:
                     for mobs in mobsN1:
                         if jouer == 0:
@@ -281,11 +310,11 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte1.structure[player.y-1][player.x]=='h':
+                        if carte1.structure[player.y-1][player.x]=='h' or carte1.structure[player.y-1][player.x]=='e':
                             player.moveup()
                             update()
 
-                      
+                #si clic sur la fleche basse il se passe la meme chose que plus haut
                 if event.key==K_DOWN:
                     for mobs in mobsN1:
                         if jouer == 0:
@@ -295,10 +324,11 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte1.structure[player.y+1][player.x]=='h':
+                        if carte1.structure[player.y+1][player.x]=='h' or carte1.structure[player.y+1][player.x]=='e':
                             player.movedown()
                             update()
                       
+                #si clic sur la fleche droite il se passe la meme chose que plus haut
                 if event.key==K_RIGHT:
                     for mobs in mobsN1:
                         if jouer == 0:
@@ -309,33 +339,38 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte1.structure[player.y][player.x+1]=='h':
+                        if carte1.structure[player.y][player.x+1]=='h' or carte1.structure[player.y][player.x+1]=='e':
                             player.moveright()
                             update()
                         
+                #si clic sur la barre d'espace
                 if event.key==K_SPACE:
+                    #on met a jour sans mouvement du personnage
                     update()
 
-
+                #Si clic sur 1 lancement du sort berserk
                 if event.key ==K_1:
                     berserk.lancer()
                     
+                #Si clic sur 1 lancement du sort corps d'acier
                 if event.key == K_2:
                     corps_dacier.lancer()
                     
+                #Si clic sur 1 lancement du sort arme enflamee
                 if event.key == K_3:
                     arme_enflammee.lancer()
                     
+                #Si clic sur 1 lancement du sort invisibilite
                 if event.key== K_4:
                     invisibilite.lancer()
                     
+                #Si clic sur 1 lancement du sort soin
                 if event.key ==K_5:
                     soin.lancer()
-                    
-                #if event.key==K_O:
-                    #crash
-                      
+
+        #si le joueur est mort              
         if player.estmort == True:
+            #passage a la variable qui mene a l'ecran de game over
             suite = 7                
 
         #fin du niveau 1 si le joueur atteind l'arrivee
@@ -347,18 +382,30 @@ while 1:
     pygame.mixer.music.play(-1)
     player.x = 30
     player.y = 47
+    stuffinst()
+    #meme fonctionnement que le niveau 1
     while suite ==2:
         hud()
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("2")
         Niveau = 2
-        def_niveau.close
+        def_niveau.close()
         carte2.generer()
         carte2.afficher(fenetre)
         for mobs in mobsN2:
             if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                 fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
+        for armure in stufflist:
+            if armure.x > player.x-6 and armure.x < player.x+6 and armure.y > player.y-6 and armure.y < player.y+6:
+                fenetre.blit(armure.image,(640+(armure.x-player.x)*72,360+(armure.y-player.y)*72))
+                if armure.x == player.x and armure.y == player.y:
+                        player.equiper_armure(armure)
+        for arme in stufflist:
+            if arme.x > player.x-6 and arme.x < player.x+6 and arme.y > player.y-6 and arme.y < player.y+6:
+                fenetre.blit(arme.image,(640+(arme.x-player.x)*72,360+(arme.y-player.y)*72))
+                if arme.x == player.x and arme.y == player.y:
+                        player.equiper_arme(arme)
         fenetre.blit(player.image,(640,360))
         pygame.display.flip()
         for event in pygame.event.get():
@@ -377,7 +424,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte2.structure[player.y][player.x-1]=='h':
+                        if carte2.structure[player.y][player.x-1]=='h' or carte2.structure[player.y][player.x-1]=='e':
                             player.moveleft()
                             update()
                 if event.key==K_UP:
@@ -390,7 +437,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte2.structure[player.y-1][player.x]=='h':
+                        if carte2.structure[player.y-1][player.x]=='h' or carte2.structure[player.y-1][player.x]=='e':
                             player.moveup()
                             update()
 
@@ -405,7 +452,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte2.structure[player.y+1][player.x]=='h':
+                        if carte2.structure[player.y+1][player.x]=='h' or carte2.structure[player.y+1][player.x]=='e':
                             player.movedown()
                             update()
                       
@@ -419,7 +466,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte2.structure[player.y][player.x+1]=='h':
+                        if carte2.structure[player.y][player.x+1]=='h' or carte2.structure[player.y][player.x+1]=='e':
                             player.moveright()
                             update()
                     
@@ -453,18 +500,30 @@ while 1:
     pygame.mixer.music.play(-1)
     player.x = 30
     player.y = 47
+    stuffinst()
+    #meme fonctionnement que le niveau 1
     while suite == 3:
         hud()
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("3")
         Niveau = 3
-        def_niveau.close
+        def_niveau.close()
         carte3.generer()
         carte3.afficher(fenetre)
         for mobs in mobsN3:
             if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                 fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
+        for armure in stufflist:
+            if armure.x > player.x-6 and armure.x < player.x+6 and armure.y > player.y-6 and armure.y < player.y+6:
+                fenetre.blit(armure.image,(640+(armure.x-player.x)*72,360+(armure.y-player.y)*72))
+                if armure.x == player.x and armure.y == player.y:
+                        player.equiper_armure(armure)
+        for arme in stufflist:
+            if arme.x > player.x-6 and arme.x < player.x+6 and arme.y > player.y-6 and arme.y < player.y+6:
+                fenetre.blit(arme.image,(640+(arme.x-player.x)*72,360+(arme.y-player.y)*72))
+                if arme.x == player.x and arme.y == player.y:
+                        player.equiper_arme(arme)
         fenetre.blit(player.image,(640,360))
         pygame.display.flip()
         for event in pygame.event.get():
@@ -476,14 +535,14 @@ while 1:
                 if event.key==K_LEFT:
                     for mobs in mobsN3:
                         if jouer == 0:
-                            if mobs.x==player.x-1 and mobs.y==player.y:
+                            if mobs.x==player.x-1 and mobs.y==player.y or carte3.structure[player.y][player.x-1]=='e':
                                 player.image = c
                                 player.attack(mobs)
                                 update()
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte3.structure[player.y][player.x-1]=='h':
+                        if carte3.structure[player.y][player.x-1]=='h' or carte3.structure[player.y][player.x-1]=='e':
                             player.moveleft()
                             update()
                 if event.key==K_UP:
@@ -496,7 +555,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte3.structure[player.y-1][player.x]=='h':
+                        if carte3.structure[player.y-1][player.x]=='h' or carte3.structure[player.y-1][player.x]=='e':
                             player.moveup()
                             update()
 
@@ -511,7 +570,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte3.structure[player.y+1][player.x]=='h':
+                        if carte3.structure[player.y+1][player.x]=='h' or carte3.structure[player.y+1][player.x]=='e':
                             player.movedown()
                             update()
                       
@@ -525,7 +584,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte3.structure[player.y][player.x+1]=='h':
+                        if carte3.structure[player.y][player.x+1]=='h' or carte3.structure[player.y][player.x+1]=='e':
                             player.moveright()
                             update()
                     
@@ -559,18 +618,30 @@ while 1:
     pygame.mixer.music.play(-1)
     player.x = 30
     player.y = 47
+    stuffinst()
+    #meme fonctionnement que le niveau 1
     while suite==4:
         hud()
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("4")
         Niveau = 4
-        def_niveau.close
+        def_niveau.close()
         carte4.generer()
         carte4.afficher(fenetre)
         for mobs in mobsN4:
             if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                 fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
+        for armure in stufflist:
+            if armure.x > player.x-6 and armure.x < player.x+6 and armure.y > player.y-6 and armure.y < player.y+6:
+                fenetre.blit(armure.image,(640+(armure.x-player.x)*72,360+(armure.y-player.y)*72))
+                if armure.x == player.x and armure.y == player.y:
+                        player.equiper_armure(armure)
+        for arme in stufflist:
+            if arme.x > player.x-6 and arme.x < player.x+6 and arme.y > player.y-6 and arme.y < player.y+6:
+                fenetre.blit(arme.image,(640+(arme.x-player.x)*72,360+(arme.y-player.y)*72))
+                if arme.x == player.x and arme.y == player.y:
+                        player.equiper_arme(arme)
         fenetre.blit(player.image,(640,360))
         pygame.display.flip()
         for event in pygame.event.get():
@@ -589,7 +660,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte4.structure[player.y][player.x-1]=='h':
+                        if carte4.structure[player.y][player.x-1]=='h' or carte4.structure[player.y][player.x-1]=='e':
                             player.moveleft()
                             update()
                 if event.key==K_UP:
@@ -601,7 +672,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte4.structure[player.y-1][player.x]=='h':
+                        if carte4.structure[player.y-1][player.x]=='h' or carte4.structure[player.y-1][player.x]=='e':
                             player.moveup()
                             update()
 
@@ -615,7 +686,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte4.structure[player.y+1][player.x]=='h':
+                        if carte4.structure[player.y+1][player.x]=='h' or carte4.structure[player.y+1][player.x]=='e':
                             player.movedown()
                             update()
                       
@@ -628,10 +699,10 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte4.structure[player.y][player.x+1]=='h':
+                        if carte4.structure[player.y][player.x+1]=='h' or carte4.structure[player.y][player.x+1]=='e':
                             player.moveright()
                             update()
-                        
+
                 if event.key==K_SPACE:
                     update()
 
@@ -662,18 +733,30 @@ while 1:
     pygame.mixer.music.play(-1)
     player.x = 30
     player.y = 47
+    stuffinst()
+    #meme fonctionnement que le niveau 1
     while suite == 5:
         hud()
         #initialisation de la carte
         def_niveau = open("carte.txt", "w")
         def_niveau.write("5")
         Niveau = 5
-        def_niveau.close
+        def_niveau.close()
         carte5.generer()
         carte5.afficher(fenetre)
         for mobs in mobsN5:
             if mobs.x > player.x-6 and mobs.x < player.x+6 and mobs.y > player.y-6 and mobs.y < player.y+6:   
                 fenetre.blit(mobs.image,(640+(mobs.x-player.x)*72,360+(mobs.y-player.y)*72))
+        for armure in stufflist:
+            if armure.x > player.x-6 and armure.x < player.x+6 and armure.y > player.y-6 and armure.y < player.y+6:
+                fenetre.blit(armure.image,(640+(armure.x-player.x)*72,360+(armure.y-player.y)*72))
+                if armure.x == player.x and armure.y == player.y:
+                        player.equiper_armure(armure)
+        for arme in stufflist:
+            if arme.x > player.x-6 and arme.x < player.x+6 and arme.y > player.y-6 and arme.y < player.y+6:
+                fenetre.blit(arme.image,(640+(arme.x-player.x)*72,360+(arme.y-player.y)*72))
+                if arme.x == player.x and arme.y == player.y:
+                        player.equiper_arme(arme)
         fenetre.blit(player.image,(640,360))
         pygame.display.flip()
         for event in pygame.event.get():
@@ -691,7 +774,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte5.structure[player.y][player.x-1]=='h':
+                        if carte5.structure[player.y][player.x-1]=='h' or carte5.structure[player.y][player.x-1]=='e':
                             player.moveleft()
                             update()
                 if event.key==K_UP:
@@ -703,7 +786,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte5.structure[player.y-1][player.x]=='h':
+                        if carte5.structure[player.y-1][player.x]=='h' or carte5.structure[player.y-1][player.x]=='e':
                             player.moveup()
                             update()
 
@@ -717,7 +800,7 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte5.structure[player.y+1][player.x]=='h':
+                        if carte5.structure[player.y+1][player.x]=='h' or carte5.structure[player.y+1][player.x]=='e':
                             player.movedown()
                             update()
                       
@@ -730,10 +813,10 @@ while 1:
                                 update()
                                 jouer = 1
                     if jouer !=1:
-                        if carte5.structure[player.y][player.x+1]=='h':
+                        if carte5.structure[player.y][player.x+1]=='h' or carte5.structure[player.y][player.x+1]=='e':
                             player.moveright()
                             update()
-                        
+
                 if event.key==K_SPACE:
                     update()
 
@@ -758,23 +841,29 @@ while 1:
         #fin du niveau 2 si le joueur atteind l'arrivee
         if player.x==29 and player.y==12: #and persephon mort:
             suite = 6
+            
+    #Boucle de fin du jeu
     while suite ==6:
+        #affichage de l'image de gagne
         fond = pygame.image.load("Images/Gagne.jpg").convert()
         fenetre.blit(fond,(0,0))
+        #affichage du continuer
         fenetre.blit(ok, (800, 670))
         pygame.display.flip()
+        #si clic sur continuer alors sortie des boucles de niveau et recommencement du jeu
         for event in pygame.event.get():
             if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>800  and event.pos[0]<1000 and event.pos[1]<740 and event.pos[1]>670:
                 menu = 1
                 suite = 0
             
-            
+    #ecran de game over  
     while suite==7:
         fond = pygame.image.load("Images/Game over.jpg").convert()
         Recommencer = font2.render("Recommencer", 1, (51,0,0))
         fenetre.blit(fond,(0,0))
         fenetre.blit(Recommencer, (800, 670))
         pygame.display.flip()
+        #si clic sur continuer, sortie de toutes les boucles de niveau et recommencement du programme
         for event in pygame.event.get():
             if event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0]>800  and event.pos[0]<1000 and event.pos[1]<740 and event.pos[1]>670:
                 menu = 1
